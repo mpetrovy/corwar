@@ -21,7 +21,7 @@ void	ft_update(t_env *e)
 	{
 		if (begin->carr.cur_pos == MEM_SIZE)
 			begin->carr.cur_pos = 0;
-		printf("%x pos = %u player = %d\n", e->fild[begin->carr.cur_pos], begin->carr.cur_pos, begin->carr.plr_num);
+		//printf("%x pos = %u player = %d\n", e->fild[begin->carr.cur_pos], begin->carr.cur_pos, begin->carr.plr_num);
 		begin->carr.cur_pos++;
 		begin = begin->next;
 	}
@@ -33,7 +33,7 @@ void	ft_carriage_run(t_env *e)
 	short	live;
 
 	live = 1;
-	printf("here\n");
+	printf("here\n"); 
 	while (live)
 	{
 		if (e->head->carr.cur_pos == 4096)

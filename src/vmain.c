@@ -140,7 +140,7 @@ int main(int ac, char **av)
 		ft_fill_env(&e);
 		ft_init_carriage(&e);
 		ft_carriage_run(&e);
-		ft_show_for_debug(&e);
+		//ft_show_for_debug(&e);
 	}
 	printf("\n");
 	ft_memclr(&e);
