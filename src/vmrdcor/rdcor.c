@@ -27,12 +27,9 @@ void	ft_write_code(t_plr *p, unsigned char *buf, int i)
 
 	j = 0;
 	while (j < p->head.prog_size)
-	{
-		p->code[j++] =  buf[i++];
-	}
-	printf("%x\n", buf[i]);
-	if (buf[i] != '\0')
-		printf("ERROR\n");
+		p->code[j++] = buf[i++];
+	if (i != p->file_size)
+		ft_error(p->file_name, "file is more then shown");
 }
 
 void		ft_fill(t_plr *p, unsigned char *buf)
@@ -40,55 +37,53 @@ void		ft_fill(t_plr *p, unsigned char *buf)
 	int i;
 	int j;
 
-	//printf("here\n");
 	i = 4;
 	if (buf[0] == 0 && buf[1] == 234 && buf[2] == 131 && buf[3] == 243)
 		p->head.magic = 15369203;
+	else
+		ft_error(p->file_name, "magic line not exist");
 	j = 0;
 	while (i < 132)
-	{
-		printf("value = |%x|\n", buf[i]);
 		p->head.prog_name[j++] = buf[i++];
-	}
-	//printf("datat %x %x %x %x\n", buf[i], buf[i + 1], buf[i+2], buf[i+3]);
 	if (buf[i] != 0 || buf[i + 1] != 0 || buf[i + 2] != 0 || buf[i + 3] != 0)
-	{
-		printf("Error Null not exist\n");
-		exit (-1);
-	}
+		ft_error(p->file_name, "Champion name too long (Max length 128)");
 	i += 4;
-	//printf("datat %x %x %x %x\n", buf[i], buf[i + 1], buf[i+2], buf[i+3]);
-	p->head.prog_size = ft_get_prog_size(buf, i);
+	if ((p->head.prog_size = ft_get_prog_size(buf, i)) > CHAMP_MAX_SIZE)
+		ft_error(p->file_name, "Error: File champs/42.cor copy has too large\
+		 a code (993 bytes > 682 bytes)");
 	i += 4;
 	j = 0;
 	while (i < 2188)
 		p->head.comment[j++] = buf[i++];
 	if (buf[i] != 0 || buf[i + 1] != 0 || buf[i+2] != 0 || buf[i+3] != 0)
-	{
-		printf("Error second null not exist\n");
-		exit(-1);
-	}
+		ft_error(p->file_name, "second null not exist");
 	i += 4;
 	ft_write_code(p, buf, i);
-//	printf("last %x\n", buf[2214]);
-//	printf("magic %x\n", p->head.magic);
-//	printf("come %s\n", p->head.comment);
 }
 
 void	ft_read(t_plr *p)
 {
 	int				fd;
 	int				res;
+	int				empty;
 	unsigned char	buf[READ_SIZE];
 
 	fd = -1;
-	//printf("name of file %s\n", p->file_name);
+	empty = 1;
 	if ((fd = open(p->file_name, O_RDONLY)) == -1)
-		printf("Error read file\n");
+		ft_error(p->file_name, "file not exist");
 	while ((res = read(fd, buf, READ_SIZE)) > 0)
-		buf[res] = '\0';	
+	{
+		empty = 0;
+		if (res > 4096)
+			ft_error(p->file_name, "file is too long");
+		p->file_size = res;
+		buf[res] = '\0';
+	}
 	if (close(fd) == -1)
-		printf("close error\n");
+		ft_error(p->file_name, "can not close");
+	if (empty)
+		ft_error(p->file_name, "file is empty");
 	ft_fill(p, buf);
 }
 

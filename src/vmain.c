@@ -14,22 +14,6 @@
 
 // static t_op g_op_tab[17];
 
-int 	ft_valid_file(char *file)
-{
-	// int i;
-	// int len;
-//
-	//len = ft_strlen(file);
-//	i = 0;
-	// while (i < len)
-	// {
-		if (ft_strstr(file, ".cor"))
-			printf("cor is here\n");
-		//i++;
-	// }
-		return (1);
-}
-
 void	ft_parse_input(t_env *e, int ac, char **av)
 {
 	int i;
@@ -46,6 +30,8 @@ void	ft_parse_input(t_env *e, int ac, char **av)
 			e->plrs[p++].file_name = av[i];
 			e->plr_numb++;
 		}
+		if (e->plr_numb > MAX_PLAYERS)
+			ft_error("./corewar", "to much players");
 		i++;
 	}
 }
@@ -58,6 +44,7 @@ void	ft_fill_env(t_env *e)
 	int move;
 	int offset;
 
+	ft_bzero(e->fild, MEM_SIZE);
 	offset = MEM_SIZE / e->plr_numb;
 	move = offset;
 	p = 0;
@@ -110,11 +97,30 @@ void	ft_memclr(t_env *e)
 	}
 }
 
+void	ft_show_info(t_env *e)
+{
+	unsigned int i;
+	int j = 0;
+
+	while (j < e->plr_numb)
+		{
+			i = 0;
+			printf("data %u\n", e->plrs[j].head.magic);
+			printf("name %s\n", e->plrs[j].head.prog_name);
+			printf("comment %s\n", e->plrs[j].head.comment);
+			while (i < e->plrs[j].head.prog_size)
+			{
+				printf("%x ", e->plrs[j].code[i]);
+				i++;
+			}
+			j++;
+		}
+		printf("\n");
+}
+
 int main(int ac, char **av)
 {
 	t_env	e;
-	unsigned int i;
-	int j = 0;
 
 	if (ac < 2)
 		printf("Not enough files\n");
@@ -122,21 +128,7 @@ int main(int ac, char **av)
 	{
 		ft_parse_input(&e, ac, av);
 		ft_read_cor(&e, ac);
-		while (j < e.plr_numb)
-		{
-			i = 0;
-			printf("data %u\n", e.plrs[j].head.magic);
-			printf("name %s\n", e.plrs[j].head.prog_name);
-			printf("comment %s\n", e.plrs[j].head.comment);
-			while (i < e.plrs[j].head.prog_size)
-			{
-				printf("%x ", e.plrs[j].code[i]);
-				i++;
-			}
-			j++;
-		}
-		printf("\n");
-		ft_bzero(e.fild, MEM_SIZE);
+		//ft_show_info(&e);
 		ft_fill_env(&e);
 		ft_init_carriage(&e);
 		ft_carriage_run(&e);

@@ -26,7 +26,9 @@ VIRTM_FILES =  src/vmain.c \
 			   src/op.c \
 			   src/vmrdcor/rdcor.c \
 			   src/carriage.c \
-			   src/carrun.c
+			   src/carrun.c \
+			   src/validation/filevalid.c \
+			   src/error_handler/file_err_hndl.c
 OBJ = $(VIRTM_FILES:.c=.o)
 
 all: $(NAME)

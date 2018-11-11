@@ -19,7 +19,7 @@
 # include <fcntl.h>
 # include <stdio.h>//delete after all
 
-# define READ_SIZE 4096
+# define READ_SIZE 4097
 
 typedef struct 		s_carr
 {
@@ -35,6 +35,7 @@ typedef struct 		s_carr
 typedef struct 		s_plr
 {
 	char			*file_name;
+	int 			file_size;
 	t_header		head;
 	unsigned char	*code;
 	unsigned int 	plr_pos;
@@ -58,5 +59,8 @@ typedef struct 		s_env
 void				ft_read_cor(t_env *e, int ac);
 void				ft_init_carriage(t_env *e);
 void				ft_carriage_run(t_env *e);
+int 				ft_valid_file(char *file);
+
+void				ft_error(char *file, char *err_mess);
 
 #endif
