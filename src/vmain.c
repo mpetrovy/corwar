@@ -14,59 +14,6 @@
 
 // static t_op g_op_tab[17];
 
-void	ft_parse_input(t_env *e, int ac, char **av)
-{
-	int i;
-	int p;
-
-	e->plr_numb = 0;
-	p = 0;
-	i = 1;
-	while (i < ac)
-	{
-		if (ft_valid_file(av[i]))
-		{
-			printf("%s\n", av[i]);
-			e->plrs[p++].file_name = av[i];
-			e->plr_numb++;
-		}
-		if (e->plr_numb > MAX_PLAYERS)
-			ft_error("./corewar", "to much players");
-		i++;
-	}
-}
-
-void	ft_fill_env(t_env *e)
-{
-	int i;
-	unsigned int j;
-	int p;
-	int move;
-	int offset;
-
-	ft_bzero(e->fild, MEM_SIZE);
-	offset = MEM_SIZE / e->plr_numb;
-	move = offset;
-	p = 0;
-	i = 0;
-	while (i < MEM_SIZE)
-	{
-		j = 0;
-		e->plrs[p].plr_pos = i;
-		while (j < e->plrs[p].head.prog_size)
-		{
-			e->fild[i] = e->plrs[p].code[j];
-			j++;
-			i++;
-		}
-		i = move;
-		move += offset;
-		p++;
-		if (p == e->plr_numb)
-			break ;
-	}
-}
-
 void	ft_show_for_debug(t_env *e)
 {
 	int k = 0;
@@ -88,7 +35,17 @@ void	ft_show_for_debug(t_env *e)
 void	ft_memclr(t_env *e)
 {
 	int j;
+	t_carlist	*begin;
+	t_carlist	*tmp;
 
+	printf("Mem clear\n");
+	begin = e->head;
+	while (begin)
+	{
+		tmp = begin;
+		begin = begin->next;
+		free(tmp);
+	}
 	j = 0;
 	while (j < e->plr_numb)
 	{
@@ -123,19 +80,17 @@ int main(int ac, char **av)
 	t_env	e;
 
 	if (ac < 2)
-		printf("Not enough files\n");
+		ft_error(av[0], "Not enough files");
 	else
 	{
 		ft_parse_input(&e, ac, av);
 		ft_read_cor(&e, ac);
 		//ft_show_info(&e);
-		ft_fill_env(&e);
+		ft_fill_env(&e, 0, 0);
 		ft_init_carriage(&e);
 		ft_carriage_run(&e);
 		//ft_show_for_debug(&e);
 	}
-	printf("\n");
 	ft_memclr(&e);
 	return (0);	
 }
-

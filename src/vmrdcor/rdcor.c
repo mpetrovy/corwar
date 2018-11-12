@@ -12,13 +12,12 @@
 
 #include "vm.h"
 
-
-unsigned int ft_get_prog_size(unsigned char *buf, int i)
+static unsigned int ft_get_prog_size(unsigned char *buf, int i)
 {
 	return ((buf[i] << 24) | (buf[i + 1] << 16) | (buf[i + 2] << 8) | (buf[i + 3]));
 }
 
-void	ft_write_code(t_plr *p, unsigned char *buf, int i)
+static void	ft_write_code(t_plr *p, unsigned char *buf, int i)
 {
 	unsigned int j;
 
@@ -32,7 +31,7 @@ void	ft_write_code(t_plr *p, unsigned char *buf, int i)
 		ft_error(p->file_name, "file is more then shown");
 }
 
-void		ft_fill(t_plr *p, unsigned char *buf)
+static void		ft_fill(t_plr *p, unsigned char *buf)
 {
 	int i;
 	int j;
@@ -61,7 +60,7 @@ void		ft_fill(t_plr *p, unsigned char *buf)
 	ft_write_code(p, buf, i);
 }
 
-void	ft_read(t_plr *p)
+static void	ft_read(t_plr *p)
 {
 	int				fd;
 	int				res;

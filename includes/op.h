@@ -53,7 +53,7 @@
 **
 */
 
-typedef char	t_arg_type;
+typedef char					t_arg_type;
 
 #define T_REG					1
 #define T_DIR					2
@@ -68,24 +68,24 @@ typedef char	t_arg_type;
 # define COMMENT_LENGTH			(2048)
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
-typedef struct		s_header
+typedef struct					s_header
 {
-  unsigned int		magic;
-  char				prog_name[PROG_NAME_LENGTH + 1];
-  unsigned int		prog_size;
-  char				comment[COMMENT_LENGTH + 1];
-}					t_header;
+  unsigned int					magic;
+  char							prog_name[PROG_NAME_LENGTH + 1];
+  unsigned int					prog_size;
+  char							comment[COMMENT_LENGTH + 1];
+}								t_header;
 
-typedef struct		s_op
+typedef struct					s_op
 {
-	char	name[PROG_NAME_LENGTH];
-	int		nb_params;
-	char	params_type[3];
-	int		id;
-	int		cycles;
-	char	description[50];
-	int		acb;
-	int		label_size;
-}					t_op;
+	char						name[PROG_NAME_LENGTH];
+	int							nb_params;
+	char						params_type[3];
+	int							id;
+	int							cycles;
+	char						description[50];
+	int							acb;
+	int							label_size;
+}								t_op;
 
 #endif
