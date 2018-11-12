@@ -109,7 +109,7 @@ int ft_check_space(char *line, int nc, t_form *assm, char *param)
 	}
 	if (nc == 1)
 	{
-		if (line[assm->i] == '#')
+		if (line[assm->i] == '#' || line[assm->i] == ';')
 			assm->hash = 1;
 		if (line[assm->i] != ' ' && line[assm->i] != '\t' && assm->hash == 0)
 			ft_error(param);
