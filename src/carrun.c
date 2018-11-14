@@ -52,9 +52,12 @@ void	ft_set_handlers(t_hndl *func)
 	func[1] = &ft_live_hndl;
 	func[2] = &ft_ld_hndl;
 	func[3] = &ft_st_hndl;
+	func[4] = &ft_add_hndl;
+	func[5] = &ft_sub_hndl;
 	func[6] = &ft_and_hndl;
 	func[7] = &ft_or_hndl;
 	func[8] = &ft_xor_hndl;
+	func[9] = &ft_zjump_hndl;
 	func[10] = &ft_ldi_hndl;
 	func[11] = &ft_sti_hndl;
 }
@@ -87,6 +90,8 @@ void	ft_handle_command(t_env *e, t_carr *car)
 				car->working = 0;
 		}
 	}
+	else
+		car->cur_pos++;
 }
 
 void	ft_update(t_env *e)
@@ -117,8 +122,8 @@ void	ft_carriage_run(t_env *e)
 	printf("here\n"); 
 	while (live)
 	{
-		if (cycles == 27)
-			break ;
+		// if (cycles == 27)
+			// break ;
 		// if (e->head->carr.cur_pos == 4096)
 		// 	break ;
 		printf("\ncycle = %d\n\n", cycles);

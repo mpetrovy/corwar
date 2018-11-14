@@ -103,11 +103,14 @@ typedef unsigned int (*t_get)(t_env*, t_carr*, int*);
 void				ft_set_f(t_get *f);
 void				ft_live_hndl(t_env *e, t_carr *car);
 void				ft_ld_hndl(t_env *e, t_carr *carr);
-void				ft_sti_hndl(t_env *e, t_carr *car);
 void				ft_st_hndl(t_env *e, t_carr *car);
+void				ft_add_hndl(t_env *e, t_carr *car);
+void				ft_sub_hndl(t_env *e, t_carr *car);
 void				ft_and_hndl(t_env *e, t_carr *car);
 void				ft_or_hndl(t_env *e, t_carr *car);
 void				ft_xor_hndl(t_env *e, t_carr *car);
+void				ft_zjump_hndl(t_env *e, t_carr *car);
 void				ft_ldi_hndl(t_env *e, t_carr *car);
+void				ft_sti_hndl(t_env *e, t_carr *car); // modification needed
 
 #endif
