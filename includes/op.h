@@ -76,16 +76,14 @@ typedef struct					s_header
   char							comment[COMMENT_LENGTH + 1];
 }								t_header;
 
-typedef struct					s_op
+typedef struct					s_values
 {
-	char						name[PROG_NAME_LENGTH];
-	int							nb_params;
-	char						params_type[3];
+	int							args;
+	char						arg_t[3];
 	int							id;
 	int							cycles;
-	char						description[50];
 	int							acb;
-	int							label_size;
-}								t_op;
+	int							label;
+}								t_values;
 
 #endif

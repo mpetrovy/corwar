@@ -25,18 +25,21 @@ typedef struct 		s_carr
 {
 	unsigned int	cur_pos;
 	short			carry;
-	short			numb;
+	short			player;
 	unsigned int	plr_num;
+	int				args[3];
 	unsigned int	reg[REG_NUMBER];
 	short			alive;
 	short			command;
 	int				cycles;
+	short			working;
 }					t_carr;
 
 typedef struct 		s_plr
 {
 	char			*file_name;
 	int 			file_size;
+	int				lifes;
 	t_header		head;
 	unsigned char	*code;
 	unsigned int 	plr_pos;
@@ -51,12 +54,17 @@ typedef struct 			s_carlist
 
 typedef struct 		s_env
 {
+	int 			cycle_to_die;
+	int				lives;
 	t_carlist		*head;
 	unsigned char	fild[MEM_SIZE];
 	t_plr			plrs[5];
 	short			plr_numb;
-	
+	t_values		funcs[17];
 }					t_env;
+
+typedef void	(*t_hndl)(t_env*, t_carr*);
+
 /*
 **	vmrdcor/rdcor.c
 */
@@ -85,5 +93,21 @@ void				ft_parse_input(t_env *e, int ac, char **av);
 **	initialization.c
 */
 void				ft_fill_env(t_env *e, int i, int p);
+
+/*
+** function_handlers
+*/
+
+unsigned int		ft_get_value(t_env *e, int cur_pos, int label);
+typedef unsigned int (*t_get)(t_env*, t_carr*, int*);
+void				ft_set_f(t_get *f);
+void				ft_live_hndl(t_env *e, t_carr *car);
+void				ft_ld_hndl(t_env *e, t_carr *carr);
+void				ft_sti_hndl(t_env *e, t_carr *car);
+void				ft_st_hndl(t_env *e, t_carr *car);
+void				ft_and_hndl(t_env *e, t_carr *car);
+void				ft_or_hndl(t_env *e, t_carr *car);
+void				ft_xor_hndl(t_env *e, t_carr *car);
+void				ft_ldi_hndl(t_env *e, t_carr *car);
 
 #endif

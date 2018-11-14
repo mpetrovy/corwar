@@ -30,7 +30,16 @@ VIRTM_FILES =  src/vmain.c \
 			   src/parsing.c \
 			   src/validation/filevalid.c \
 			   src/initialization.c \
-			   src/error_handler/file_err_hndl.c
+			   src/error_handler/file_err_hndl.c \
+			   src/functions/ft_sti_hndl.c \
+			   src/functions/ft_ld_hndl.c \
+			   src/functions/ft_st_hndl.c \
+			   src/functions/ft_live_hndl.c \
+			   src/functions/ft_and_hndl.c \
+			   src/functions/ft_or_hndl.c \
+			   src/functions/ft_xor_hndl.c \
+			   src/functions/ft_setup_andorxor.c \
+			   src/functions/ft_ldi_hndl.c
 OBJ = $(VIRTM_FILES:.c=.o)
 
 all: $(NAME)

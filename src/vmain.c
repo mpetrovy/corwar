@@ -12,7 +12,9 @@
 
 #include "vm.h"
 
-// static t_op g_op_tab[17];
+// const int g_cycle[17] = {0, 10, 5, 5, 10, 10, 6, 6, 6, 20, 25, 25, 800, 10, 50, 1000, 2};
+
+//static t_op g_op_tab[17];
 
 void	ft_show_for_debug(t_env *e)
 {
