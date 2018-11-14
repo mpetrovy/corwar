@@ -97,9 +97,9 @@ void				ft_fill_env(t_env *e, int i, int p);
 /*
 ** function_handlers
 */
+typedef unsigned int (*t_get)(t_env*, t_carr*, int*);
 
 unsigned int		ft_get_value(t_env *e, int cur_pos, int label);
-typedef unsigned int (*t_get)(t_env*, t_carr*, int*);
 void				ft_set_f(t_get *f);
 void				ft_live_hndl(t_env *e, t_carr *car);
 void				ft_ld_hndl(t_env *e, t_carr *carr);
@@ -112,5 +112,8 @@ void				ft_xor_hndl(t_env *e, t_carr *car);
 void				ft_zjump_hndl(t_env *e, t_carr *car);
 void				ft_ldi_hndl(t_env *e, t_carr *car);
 void				ft_sti_hndl(t_env *e, t_carr *car); // modification needed
+void				ft_lld_hndl(t_env *e, t_carr *car);
+void				ft_lldi_hndl(t_env *e, t_carr *car);
+void				ft_aff_hndl(t_env *e, t_carr *car);
 
 #endif

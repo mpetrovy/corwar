@@ -17,10 +17,14 @@ int	ft_check_valid(t_env *e, t_carr *car, int arg)
 	int i;
 	unsigned char nbr;
 
-	if (e->funcs[car->command].acb == 0)
-		return (1);
-	nbr = e->fild[car->cur_pos + 1];
 	printf("command %d\n", car->command);
+	if (e->funcs[car->command].acb == 0)
+	{
+		printf("we are here\n");
+		return (1);
+	}
+	nbr = e->fild[car->cur_pos + 1];
+	
 	printf("nbr = %x\n", nbr);
 	i = 0;
 	while (i < arg)
@@ -60,6 +64,9 @@ void	ft_set_handlers(t_hndl *func)
 	func[9] = &ft_zjump_hndl;
 	func[10] = &ft_ldi_hndl;
 	func[11] = &ft_sti_hndl;
+	func[13] = &ft_lld_hndl;
+	func[14] = &ft_lldi_hndl;
+	func[16] = &ft_aff_hndl;
 }
 
 static t_hndl g_func[17];
