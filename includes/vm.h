@@ -26,6 +26,7 @@ typedef struct 		s_carr
 	unsigned int	cur_pos;
 	short			carry;
 	short			player;
+	int 			car_index;
 	unsigned int	plr_num;
 	int				args[3];
 	unsigned int	reg[REG_NUMBER];
@@ -57,6 +58,7 @@ typedef struct 		s_env
 	int 			cycle_to_die;
 	int				lives;
 	t_carlist		*head;
+	int 			cursors;
 	unsigned char	fild[MEM_SIZE];
 	t_plr			plrs[5];
 	short			plr_numb;
@@ -112,8 +114,10 @@ void				ft_xor_hndl(t_env *e, t_carr *car);
 void				ft_zjump_hndl(t_env *e, t_carr *car);
 void				ft_ldi_hndl(t_env *e, t_carr *car);
 void				ft_sti_hndl(t_env *e, t_carr *car); // modification needed
+void				ft_fork_hndl(t_env *e, t_carr *car);
 void				ft_lld_hndl(t_env *e, t_carr *car);
 void				ft_lldi_hndl(t_env *e, t_carr *car);
+void				ft_lfork_hndl(t_env *e, t_carr *car);
 void				ft_aff_hndl(t_env *e, t_carr *car);
 
 #endif

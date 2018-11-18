@@ -17,7 +17,7 @@ int	ft_check_valid(t_env *e, t_carr *car, int arg)
 	int i;
 	unsigned char nbr;
 
-	printf("command %d\n", car->command);
+	printf("command this %d\n", car->command);
 	if (e->funcs[car->command].acb == 0)
 	{
 		printf("we are here\n");
@@ -64,8 +64,10 @@ void	ft_set_handlers(t_hndl *func)
 	func[9] = &ft_zjump_hndl;
 	func[10] = &ft_ldi_hndl;
 	func[11] = &ft_sti_hndl;
+	func[12] = &ft_fork_hndl;
 	func[13] = &ft_lld_hndl;
 	func[14] = &ft_lldi_hndl;
+	func[15] = &ft_lfork_hndl;
 	func[16] = &ft_aff_hndl;
 }
 
@@ -97,8 +99,8 @@ void	ft_handle_command(t_env *e, t_carr *car)
 				car->working = 0;
 		}
 	}
-	else
-		car->cur_pos++;
+	//else
+		//car->cur_pos++;
 }
 
 void	ft_update(t_env *e)
@@ -110,8 +112,11 @@ void	ft_update(t_env *e)
 	{
 		if (begin->carr.cur_pos == MEM_SIZE)
 			begin->carr.cur_pos = 0;
+		printf("nbr car %d\n", begin->carr.car_index);
+		printf("nbr 1 = %d nbr 2 = %d\n", begin->carr.cur_pos, begin->carr.cur_pos + 1);
+		printf("command = %x next %x pos = %u player = %d\n", e->fild[begin->carr.cur_pos], e->fild[begin->carr.cur_pos + 1], begin->carr.cur_pos, begin->carr.player);
 		ft_handle_command(e, &begin->carr);
-		printf("%x pos = %u player = %d\n", e->fild[begin->carr.cur_pos], begin->carr.cur_pos, begin->carr.player);
+		
 		//begin->carr.cur_pos++;
 		begin = begin->next;
 	}
@@ -126,11 +131,10 @@ void	ft_carriage_run(t_env *e)
 	cycles = 0;
 	live = 1;
 	ft_set_handlers(g_func);
-	printf("here\n"); 
 	while (live)
 	{
-		// if (cycles == 27)
-			// break ;
+		if (cycles == 40000) 
+			break ;
 		// if (e->head->carr.cur_pos == 4096)
 		// 	break ;
 		printf("\ncycle = %d\n\n", cycles);

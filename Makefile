@@ -43,8 +43,10 @@ VIRTM_FILES =  src/vmain.c \
 			   src/functions/ft_ldi_hndl.c \
 			   src/functions/ft_zjump_hndl.c \
 			   src/functions/ft_sti_hndl.c \
+			   src/functions/ft_fork_hndl.c \
 			   src/functions/ft_lld_hndl.c \
 			   src/functions/ft_lldi_hndl.c \
+			   src/functions/ft_lfork_hndl.c \
 			   src/functions/ft_aff_hndl.c
 OBJ = $(VIRTM_FILES:.c=.o)
 
