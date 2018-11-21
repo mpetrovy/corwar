@@ -39,6 +39,8 @@ void ft_zero(t_form *assm)
 	assm->comment = NULL;
 	assm->is_n = 0;
 	assm->is_c = 0;
+	assm->is_cmd = 0;
+	assm->is_com = 1;
 	assm->hash = 0;
 	assm->i = 0;
 }
@@ -52,16 +54,38 @@ void ft_reader(t_form *assm, char *line)
 	 {
 	 	if (i == 0 && line == NULL)
 	 		exit(0);
-	 	if (ft_strstr(line, ".name"))
+	 	else if (ft_strstr(line, ".name"))
 	 		line = ft_get_name(assm, line, 0);
-	 	if (ft_strstr(line, ".comment"))
+	 	else if (ft_strstr(line, ".comment"))
 	 	 	line = ft_get_comment(assm, line, 0);
+	 	else if ((assm->i_cmd = ft_find_command(assm, line)) != 17 || assm->is_l == 1)
+	 		line = ft_get_command(assm, line, 0, NULL);
+	 	else if (ft_space_line(line) == 0)
+	 		ft_error("line");
 	 	i++;
 		if (line != NULL)
 	 		ft_strdel(&line);
 	 }
-	 if (assm->is_c != 1 || assm->is_n != 1)
+	 if (assm->is_c != 1 || assm->is_n != 1 || assm->is_cmd == 0)
 			ft_error("file");
+}
+
+int ft_space_line(char *line)
+{
+	int i;
+	int hash;
+
+	hash = 0;
+	i = 0;
+	while (line[i] != '\0')
+	{
+		if (line[i] == '#')
+			hash = 1;
+		if (line[i] != ' ' && line[i] != '\t' && hash == 0)
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 char *ft_name_next(t_form *assm, char *line, int k)
@@ -200,4 +224,157 @@ char *ft_comment_next(t_form *assm, char *line, int k)
 	assm->comment = ft_strsub(str, 0, l);
 	ft_strdel(&str);
 	return (line);
+}
+
+t_op    op_tab[17] =
+{
+	{"live", 1, {T_DIR}, 1, 10, 0, 0, 0, 0},
+	{"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, 1, 0, 0, 0},
+	{"st", 2, {T_REG, T_IND | T_REG}, 3, 5, 1, 0, 0, 0},
+	{"add", 3, {T_REG, T_REG, T_REG}, 4, 10, 1, 0, 0, 0},
+	{"sub", 3, {T_REG, T_REG, T_REG}, 5, 10, 1, 0, 0, 0},
+	{"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 6, 6, 1, 0, 0, 0},
+	{"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 7, 6, 1, 0, 0, 0},
+	{"xor", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 8, 6, 1, 0, 0, 0},
+	{"zjmp", 1, {T_DIR}, 9, 20, 0, 1, 0, 0},
+	{"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 10, 25, 1, 1, 0, 0},
+	{"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 11, 25, 1, 1, 0, 0},
+	{"fork", 1, {T_DIR}, 12, 800, 0, 1, 0, 0},
+	{"lld", 2, {T_DIR | T_IND, T_REG}, 13, 10, 1, 0, 0, 0},
+	{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 14, 50, 1, 1, 0, 0},
+	{"lfork", 1, {T_DIR}, 15, 1000, 0, 1, 0, 0},
+	{"aff", 1, {T_REG}, 16, 2, 1, 0, 0, 0},
+	{0, 0, {0}, 0, 0, 0, 0, 0, 0}
+};
+
+int ft_find_command(t_form *assm, char *line)
+{
+	int i;
+	int j;
+	
+	assm->is_l = 0;
+	i = 0;
+	j = ft_find_label(assm, line);
+	while (i < 16)
+	{
+		if (ft_strstr(line + j, op_tab[i].name))
+		{	
+			while (line[j] == ' ' || line[j] == '\t')
+				j++;
+			if (line[j] == '#')
+				return (17);
+			if (ft_strncmp(line + j, op_tab[i]. name, ft_strlen(op_tab[i].name)) == 0)
+				return (i);
+		}
+		i++;
+	}
+	return (17);
+}
+
+int ft_find_label(t_form *assm, char *line)
+{
+	int i;
+
+	i = 0;
+	while (line[i] == ' ' || line[i] == '\t')
+		i++;
+	while (line[i] != ':' && line[i] != '#' && line[i] != '\0')
+	{
+		if (ft_strchr(LABEL_CHARS, line[i]))
+			i++;
+		else
+			return (0);
+	}
+	if (line[i] == ':')
+	{
+		assm->is_l = 1;
+		return (i + 1);
+	}
+	return (0);
+}
+
+char *ft_get_command(t_form *assm, char *line, int i, char *labtmp)
+{
+	if (assm->is_l == 1)
+		labtmp = ft_label_valid(assm, &i, line);
+	while (ft_find_command(assm, line) == 17)
+	{	
+		i = 0;
+		ft_strdel(&line);
+		if (!(get_next_line(assm->fd, &line)))
+		{
+			line = NULL;
+			assm->is_com = 0;
+			break ;
+		}
+		if (ft_find_label(assm, line) >= 1)
+		{
+			if (labtmp != NULL)
+				ft_strdel(&labtmp);
+			labtmp = ft_label_valid(assm, &i, line);
+		}
+		else if (ft_find_command(assm, line) == 17 && ft_space_line(line) == 0)
+			ft_error("line");
+	}
+	if (assm->is_com != 0)
+		ft_add_command(assm, line, i, labtmp);
+	return (line);	
+}
+
+void ft_add_command(t_form *assm, char *line, int i, char *labtmp)
+{
+	int k;
+	t_op *ptr;
+
+	while (line[i] == ' ' || line[i] == '\t')
+		i++;
+	k = i;
+	while (line[i] != ' ' && line[i] != '\t')
+		i++;
+	if (!assm->com)
+	{
+		assm->com = ft_memalloc(sizeof(t_op));
+		*assm->com = NULL;
+	}
+	ptr = ft_memalloc(sizeof(t_op));
+	ptr->name = ft_strsub(line, k, i - k);
+	ptr->argc = op_tab[assm->i_cmd].argc;
+	ptr->opcode = op_tab[assm->i_cmd].opcode;
+	ptr->labelsize = op_tab[assm->i_cmd].labelsize;
+	if (assm->is_l == 1)
+		ptr->label = ft_strdup(labtmp);
+	else
+		ptr->label = NULL;
+	ptr->next = (*assm->com);
+	*assm->com = ptr;
+	assm->is_cmd++;
+}
+
+char *ft_label_valid(t_form *assm, int *i, char *line)
+{
+	int k;
+	char *lab;
+	int j;
+
+	assm->hash = 0;
+	while (line[*i] == ' ' || line[*i] == '\t')
+		*i = *i + 1;
+	k = *i;
+	while (line[*i] != ':')
+		*i = *i + 1;
+	*i = *i + 1;
+	if (ft_find_command(assm, line) == 17)
+	{
+		j = *i;
+		while (line[j] != '\0')
+		{
+			if (line[j] == '#')
+				assm->hash = 1;
+			if ((line[j] != ' ' && line[j] != '\t') && assm->hash == 0)
+				ft_error("label");
+			j++;
+		}
+	}
+	lab = ft_strsub(line, k, *i - k - 1);
+	return (lab);
 }
