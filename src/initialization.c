@@ -35,6 +35,7 @@ void	ft_set_data(t_env *e)
 		i++;
 	}
 	e->cycle_to_die = CYCLE_TO_DIE;
+	e->cur_cycle = 0;
 	e->lives = 0;
 	e->cursors = 0; //maybe delete
 	e->plrs[0].lifes = 0;

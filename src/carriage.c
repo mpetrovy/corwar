@@ -23,7 +23,7 @@ static t_carlist	*ft_create_car(unsigned int pos, short i, unsigned int nbr)
 	lst->carr.carry = 0;
 	lst->carr.car_index = 0;
 	lst->carr.reg[0] = nbr;
-	//lst->carr.plr_num = nbr;
+	lst->carr.killed = 0;
 	lst->carr.alive = 0;
 	lst->carr.command = 0;
 	lst->carr.cycles = 0;

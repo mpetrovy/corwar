@@ -1,5 +1,17 @@
 #include "vm.h"
 
+static void	ft_copy(unsigned int *dst, unsigned int *cp)
+{
+	int i;
+
+	i = 0;
+	while (i < REG_NUMBER)
+	{
+		dst[i] = cp[i];
+		i++;
+	}
+}
+
 static void	ft_add_cursor(t_env *e, t_carr *car, unsigned int pos)
 {
 	t_carlist *lst;
@@ -12,8 +24,9 @@ static void	ft_add_cursor(t_env *e, t_carr *car, unsigned int pos)
 	lst->carr.player = car->player;
 	lst->carr.car_index = e->cursors + 1;
 	lst->carr.carry = car->carry;
-	lst->carr.reg[0] = car->reg[0];
-	//lst->carr.plr_num = nbr;
+	ft_copy(lst->carr.reg, car->reg);
+	//lst->carr.reg[0] = car->reg[0];
+	lst->carr.killed = car->killed;
 	lst->carr.alive = car->alive;
 	lst->carr.command = 0;
 	lst->carr.cycles = 0;

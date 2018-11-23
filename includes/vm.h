@@ -31,6 +31,7 @@ typedef struct 		s_carr
 	int				args[3];
 	unsigned int	reg[REG_NUMBER];
 	short			alive;
+	short			killed;
 	short			command;
 	int				cycles;
 	short			working;
@@ -56,6 +57,7 @@ typedef struct 			s_carlist
 typedef struct 		s_env
 {
 	int 			cycle_to_die;
+	int				cur_cycle;
 	int				lives;
 	t_carlist		*head;
 	int 			cursors;

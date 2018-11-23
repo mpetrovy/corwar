@@ -110,36 +110,46 @@ void	ft_update(t_env *e)
 	begin = e->head;
 	while (begin)
 	{
+		//if (begin->carr.)
 		if (begin->carr.cur_pos == MEM_SIZE)
 			begin->carr.cur_pos = 0;
 		printf("nbr car %d\n", begin->carr.car_index);
 		printf("nbr 1 = %d nbr 2 = %d\n", begin->carr.cur_pos, begin->carr.cur_pos + 1);
 		printf("command = %x next %x pos = %u player = %d\n", e->fild[begin->carr.cur_pos], e->fild[begin->carr.cur_pos + 1], begin->carr.cur_pos, begin->carr.player);
-		ft_handle_command(e, &begin->carr);
-		
-		//begin->carr.cur_pos++;
+		if (!begin->carr.killed)
+			ft_handle_command(e, &begin->carr);
 		begin = begin->next;
 	}
-	// e->head = begin;
+}
+
+void	ft_check_cycle(t_env *e, short *live)
+{
+
 }
 
 void	ft_carriage_run(t_env *e)
 {
 	short	live;
 	int		cycles;
+	int		cur_cycle;
 
 	cycles = 0;
+	cur_cycle = 0;
 	live = 1;
 	ft_set_handlers(g_func);
 	while (live)
 	{
-		if (cycles == 40000) 
-			break ;
-		// if (e->head->carr.cur_pos == 4096)
-		// 	break ;
-		printf("\ncycle = %d\n\n", cycles);
-		printf("lifes player 0 = %d\n", e->plrs[0].lifes);
-		ft_update(e);
-		cycles++;
+		if (cur_cycle == CYCLE_TO_DIE)
+			ft_check_cycle(e, &live);
+		else
+		{
+			// if (cycles == 500) 
+			// 	break ;
+			printf("\ncycle = %d\n\n", cycles);
+			printf("lifes player 0 = %d\n", e->plrs[0].lifes);
+			ft_update(e);
+			cycles++;
+			cur_cycle++;
+		}
 	}
 }

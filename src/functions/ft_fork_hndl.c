@@ -1,6 +1,6 @@
 #include "vm.h"
 
-void	ft_copy(unsigned int *dst, unsigned int *cp)
+static void	ft_copy(unsigned int *dst, unsigned int *cp)
 {
 	int i;
 
@@ -26,7 +26,7 @@ static void	ft_add_cursor(t_env *e, t_carr *car, unsigned int pos)
 	lst->carr.carry = car->carry;
 	ft_copy(lst->carr.reg, car->reg);
 	//lst->carr.reg[0] = car->reg[0];
-	//lst->carr.plr_num = nbr;
+	lst->carr.killed = car->killed;
 	lst->carr.alive = car->alive;
 	lst->carr.command = 0;
 	lst->carr.cycles = 0;
