@@ -251,7 +251,8 @@ int ft_find_command(t_form *assm, char *line)
 {
 	int i;
 	int j;
-	
+	int k;
+
 	assm->is_l = 0;
 	i = 0;
 	j = ft_find_label(assm, line);
@@ -263,8 +264,12 @@ int ft_find_command(t_form *assm, char *line)
 				j++;
 			if (line[j] == '#')
 				return (17);
-			if (ft_strncmp(line + j, op_tab[i]. name, ft_strlen(op_tab[i].name)) == 0)
+			k = j;
+			while (line[j] != ' ' && line[j] != '\t')
+				j++;
+			if (ft_strncmp(line + k, op_tab[i]. name, j - k) == 0)
 				return (i);
+			j = k;
 		}
 		i++;
 	}
