@@ -38,6 +38,7 @@ void	ft_live_hndl(t_env *e, t_carr *car)
 	{
 		car->alive = 1;
 		e->lives += 1;
+		e->winner = num_player;
 		e->plrs[num_player].lifes += 1;
 		car->cur_pos += 5;
 	}

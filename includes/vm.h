@@ -20,6 +20,7 @@
 # include <stdio.h>//delete after all
 
 # define READ_SIZE 4097
+# define MODA(value) (value % MEM_SIZE < 0 ? value % MEM_SIZE + MEM_SIZE : value % MEM_SIZE)
 
 typedef struct 		s_carr
 {
@@ -58,6 +59,8 @@ typedef struct 		s_env
 {
 	int 			cycle_to_die;
 	int				cur_cycle;
+	int				winner;
+	int				checks;
 	int				lives;
 	t_carlist		*head;
 	int 			cursors;

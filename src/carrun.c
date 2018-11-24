@@ -21,10 +21,9 @@ int	ft_check_valid(t_env *e, t_carr *car, int arg)
 	if (e->funcs[car->command].acb == 0)
 	{
 		printf("we are here\n");
-		return (1);
+		return (1);// обработать смещение карретки в соотвествие с ее кол-вом аргументов
 	}
 	nbr = e->fild[car->cur_pos + 1];
-	
 	printf("nbr = %x\n", nbr);
 	i = 0;
 	while (i < arg)
@@ -45,7 +44,7 @@ int	ft_check_valid(t_env *e, t_carr *car, int arg)
 			car->args[i] = IND_CODE;
 		}
 		else
-			return (0);
+			return (0);// обработать смещение карретки в соотвествие с ее кол-вом аргументов
 		i++;
 	}
 	return (1);
@@ -79,18 +78,19 @@ void	ft_handle_command(t_env *e, t_carr *car)
 		if (car->command == 0)
 		{
 			car->command = e->fild[car->cur_pos];
-			car->cycles = e->funcs[car->command].cycles;
+			car->cycles = e->funcs[car->command].cycles - 1;
 			car->working = 1;
 		}
 		if (car->working == 0 && car->cycles == 0)
 		{
 			if (ft_check_valid(e, car, e->funcs[car->command].args))
 			{
+				printf("command %d\n", car->command);
 				g_func[car->command](e, car);
 				car->command = 0;
 			}
 			else
-				ft_error("./corewar", "not valid <> arguments");
+				car->cur_pos++;
 		}
 		else
 		{
@@ -99,8 +99,8 @@ void	ft_handle_command(t_env *e, t_carr *car)
 				car->working = 0;
 		}
 	}
-	//else
-		//car->cur_pos++;
+	else
+		car->cur_pos++;
 }
 
 void	ft_update(t_env *e)
@@ -113,18 +113,64 @@ void	ft_update(t_env *e)
 		//if (begin->carr.)
 		if (begin->carr.cur_pos == MEM_SIZE)
 			begin->carr.cur_pos = 0;
-		printf("nbr car %d\n", begin->carr.car_index);
-		printf("nbr 1 = %d nbr 2 = %d\n", begin->carr.cur_pos, begin->carr.cur_pos + 1);
-		printf("command = %x next %x pos = %u player = %d\n", e->fild[begin->carr.cur_pos], e->fild[begin->carr.cur_pos + 1], begin->carr.cur_pos, begin->carr.player);
+	//	printf("nbr car %d\n", begin->carr.car_index);
+	//	printf("nbr 1 = %d nbr 2 = %d\n", begin->carr.cur_pos, begin->carr.cur_pos + 1);
+	//	printf("command = %x next %x pos = %u player = %d\n", e->fild[begin->carr.cur_pos], e->fild[begin->carr.cur_pos + 1], begin->carr.cur_pos, begin->carr.player);
 		if (!begin->carr.killed)
 			ft_handle_command(e, &begin->carr);
 		begin = begin->next;
 	}
 }
 
+void	ft_check_killed_carriage(t_env *e)
+{
+	t_carlist *begin;
+	t_carlist *tmp;
+
+	begin = e->head;
+	while (begin && begin->next)
+	{
+		//printf("we try to del\n");
+		if (begin->next->carr.killed)
+		{
+			//printf("we delete this carriage\n");
+			tmp = begin->next;
+			begin->next = begin->next->next;
+			free(tmp);
+		}
+		begin = begin->next;
+	}
+}
+
 void	ft_check_cycle(t_env *e, short *live)
 {
+	t_carlist *begin;
 
+	begin = e->head;
+	while (begin)
+	{
+		//printf("we check lives\n");
+		if (begin->carr.alive)
+			begin->carr.alive = 0;
+		else
+			begin->carr.killed = 1;
+		//printf("next\n");
+		begin = begin->next;
+	}
+	if (e->lives >= NBR_LIVE || e->checks == MAX_CHECKS)
+	{
+		e->cycle_to_die -= CYCLE_DELTA;
+		e->checks = 1;
+	}
+	else
+		e->checks++;
+	if (e->cycle_to_die <= 0)
+		*live = 0;
+	e->lives = 0;
+	//printf("before del carr\n");
+	ft_check_killed_carriage(e);
+	//printf("deleted our carr\n");
+	printf("Cycle to die is now %d\n", e->cycle_to_die);
 }
 
 void	ft_carriage_run(t_env *e)
@@ -133,23 +179,23 @@ void	ft_carriage_run(t_env *e)
 	int		cycles;
 	int		cur_cycle;
 
-	cycles = 0;
-	cur_cycle = 0;
+	cycles = 1;
+	cur_cycle = 1;
 	live = 1;
 	ft_set_handlers(g_func);
 	while (live)
 	{
-		if (cur_cycle == CYCLE_TO_DIE)
-			ft_check_cycle(e, &live);
-		else
+		if (cur_cycle == e->cycle_to_die)
 		{
-			// if (cycles == 500) 
+			ft_check_cycle(e, &live);
+			cur_cycle = 0;
+		}
+			//if (cycles == 500) 
 			// 	break ;
-			printf("\ncycle = %d\n\n", cycles);
-			printf("lifes player 0 = %d\n", e->plrs[0].lifes);
+			printf("It is now cycle = %d\n", cycles);
+			//printf("lifes player 0 = %d\n", e->plrs[0].lifes);
 			ft_update(e);
 			cycles++;
 			cur_cycle++;
-		}
 	}
 }
