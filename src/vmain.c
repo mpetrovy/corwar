@@ -40,7 +40,7 @@ void	ft_memclr(t_env *e)
 	t_carlist	*begin;
 	t_carlist	*tmp;
 
-	printf("Mem clear\n");
+	printf("Mem clear\n");//delete
 	begin = e->head;
 	while (begin)
 	{
@@ -64,7 +64,7 @@ void	ft_show_info(t_env *e)
 	while (j < e->plr_numb)
 		{
 			i = 0;
-			printf("data %u\n", e->plrs[j].head.magic);
+			printf("data %u\n", e->plrs[j].head.magic);//dele
 			printf("name %s\n", e->plrs[j].head.prog_name);
 			printf("comment %s\n", e->plrs[j].head.comment);
 			while (i < e->plrs[j].head.prog_size)

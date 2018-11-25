@@ -38,7 +38,8 @@ void	ft_set_data(t_env *e)
 	e->lives = 0;
 	e->winner = e->plrs[e->plr_numb].n_numb;
 	e->checks = 0;
-	e->cursors = 0; //maybe delete
+	//e->cursors = 0; //maybe delete
+	e->carriage_index = 1;
 	e->plrs[0].lifes = 0;
 	e->plrs[1].lifes = 0;
 	e->plrs[2].lifes = 0;

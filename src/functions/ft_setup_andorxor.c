@@ -1,5 +1,23 @@
 #include "vm.h"
 
+void ft_adv_show(t_env *e, t_carr *car, unsigned int step)
+{
+	unsigned int i;
+
+	if ((e->flag_num & 16) == 16)
+	{
+		printf("ADV %u (%#.4x -> %#.4x) ", step, car->cur_pos, car->cur_pos + step);//such write
+		i = car->cur_pos;
+		while (step)
+		{
+			printf("%.2x ", e->fild[i]);// such output
+			i++;
+			step--;
+		}
+		printf("\n");
+	}	
+}
+
 static unsigned int ft_get_reg(t_env *e, t_carr *car, int *pos)
 {
 	int reg;

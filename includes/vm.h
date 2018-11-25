@@ -15,6 +15,7 @@
 
 # include "op.h"
 # include "libft.h"
+# include "ft_printf.h"
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdio.h>//delete after all
@@ -26,6 +27,7 @@ typedef struct 		s_carr
 {
 	unsigned int	cur_pos;
 	short			carry;
+	int				index;
 	short			player;
 	int 			car_index;
 	unsigned int	plr_num;
@@ -59,11 +61,12 @@ typedef struct 		s_env
 {
 	int 			cycle_to_die;
 	int				cur_cycle;
+	int				flag_num; 
 	int				winner;
 	int				checks;
 	int				lives;
+	int				carriage_index;
 	t_carlist		*head;
-	int 			cursors;
 	unsigned char	fild[MEM_SIZE];
 	t_plr			plrs[5];
 	short			plr_numb;
@@ -106,6 +109,7 @@ void				ft_fill_env(t_env *e, int i, int p);
 */
 typedef unsigned int (*t_get)(t_env*, t_carr*, int*);
 
+void				ft_adv_show(t_env *e, t_carr *car, unsigned int step);
 unsigned int		ft_get_value(t_env *e, int cur_pos, int label);
 void				ft_set_f(t_get *f);
 void				ft_live_hndl(t_env *e, t_carr *car);

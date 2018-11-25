@@ -41,7 +41,17 @@ static int	ft_check_flags(t_env *e, int ac, char **av, int p, int *i)
 	return (1);
 }
 
-
+int			ft_check_vflag(char **av, int *i)
+{
+	if (!ft_strcmp(av[*i], "-v"))
+	{
+		//printf("flag = %s\n", av[*i]);
+		(*i)++;
+		//printf("value = %s\n", av[*i]);
+		return (ft_atoi(av[(*i)++]));
+	}
+	return (0);
+}
 
 void		ft_parse_input(t_env *e, int ac, char **av)
 {
@@ -55,10 +65,13 @@ void		ft_parse_input(t_env *e, int ac, char **av)
 	while (i < ac)
 	{
 		e->plrs[p].n_numb = 0;
-		res = ft_check_flags(e, ac, av, p, &i);
-		if (ft_valid_file(av[i]))
+		if (!ft_strcmp(av[i], "-n") || !ft_strcmp(av[i], "-v"))
 		{
-			//printf("res = %d\n", res);
+			res = ft_check_flags(e, ac, av, p, &i);
+			e->flag_num = ft_check_vflag(av, &i);
+		}
+		if (i != ac && ft_valid_file(av[i]))
+		{
 			if (!res)
 				e->plrs[p].n_numb = 4294967295 - p;
 			e->plrs[p++].file_name = av[i];

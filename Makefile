@@ -13,6 +13,7 @@
 NAME = corewar
 
 HEADER = ./includes/libft/
+FT_PRINTF = ./includes/ft_printf/includes/
 VIRTM_HEADER = ./includes/
 
 SRC = src
@@ -22,6 +23,10 @@ CFLAGS = -Wall -Werror -Wextra
 CC = gcc
 
 LIB_FILES = ./includes/libft/
+FT_PRINTF_FILES = ./includes/ft_printf/
+FT_PRINTF_FILES1 = ./includes/ft_printf/obj1/
+FT_PRINTF_FILES2 = ./includes/ft_printf/obj1/parsing/
+FT_PRINTF_FILES3 = ./includes/ft_printf/obj1/type/
 VIRTM_FILES =  src/vmain.c \
 			   src/op.c \
 			   src/vmrdcor/rdcor.c \
@@ -52,18 +57,22 @@ OBJ = $(VIRTM_FILES:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LIB_FILES)libft.a
-	@$(CC) -o $(NAME) $(OBJ) $(LIB_FILES)*.o
+$(NAME): $(OBJ) $(LIB_FILES)libft.a 
+	@$(CC) -o $(NAME) $(OBJ) $(LIB_FILES)*.o 
 
 %.o: %.c $(VIRTM_HEADER)vm.h $(VIRTM_HEADER)op.h
-	@$(CC) $(CFLAGS) -c $< -o $@ -I $(HEADER) -I $(VIRTM_HEADER)
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(HEADER) -I $(VIRTM_HEADER) -I $(FT_PRINTF)
 
 $(LIB_FILES)libft.a:
 	@make -C $(LIB_FILES)
+$(FT_PRINTF_FILES)libftprintf.a:
+	@make -C $(FT_PRINTF_FILES)
 clean:
+	@make clean -C $(FT_PRINTF_FILES)
 	@make clean -C $(LIB_FILES)
 	rm -f $(OBJ)
 fclean: clean
+	@make fclean -C $(FT_PRINTF_FILES)
 	@make fclean -C $(LIB_FILES)
 	rm -f $(NAME)
 

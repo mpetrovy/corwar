@@ -185,17 +185,16 @@ void	ft_carriage_run(t_env *e)
 	ft_set_handlers(g_func);
 	while (live)
 	{
+		if ((e->flag_num & 2) == 2)
+			printf("It is now cycle = %d\n", cycles);
+			//printf("lifes player 0 = %d\n", e->plrs[0].lifes);
+		ft_update(e);
 		if (cur_cycle == e->cycle_to_die)
 		{
 			ft_check_cycle(e, &live);
 			cur_cycle = 0;
 		}
-			//if (cycles == 500) 
-			// 	break ;
-			printf("It is now cycle = %d\n", cycles);
-			//printf("lifes player 0 = %d\n", e->plrs[0].lifes);
-			ft_update(e);
-			cycles++;
-			cur_cycle++;
+		cycles++;
+		cur_cycle++;
 	}
 }
