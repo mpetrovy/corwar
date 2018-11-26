@@ -1,5 +1,5 @@
-// clang -g -Wall -Wextra -Werror -I libft/includes -o main.o -c main.c
-//clang -o test main.o -I libft/includes -L libft/ -lft
+// gcc -g -Wall -Wextra -Werror -I libft/includes -o main.o -c main.c
+//gcc -o test main.o -I libft/includes -L libft/ -lft
 
 #include "assembler.h"
 
@@ -69,6 +69,7 @@ void ft_reader(t_form *assm, char *line)
 	 if (assm->is_c != 1 || assm->is_n != 1 || assm->is_cmd == 0)
 			ft_error("file");
 }
+
 
 int ft_space_line(char *line)
 {
@@ -228,23 +229,23 @@ char *ft_comment_next(t_form *assm, char *line, int k)
 
 t_op    op_tab[17] =
 {
-	{"live", 1, {T_DIR}, 1, 10, 0, 0, 0, 0},
-	{"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, 1, 0, 0, 0},
-	{"st", 2, {T_REG, T_IND | T_REG}, 3, 5, 1, 0, 0, 0},
-	{"add", 3, {T_REG, T_REG, T_REG}, 4, 10, 1, 0, 0, 0},
-	{"sub", 3, {T_REG, T_REG, T_REG}, 5, 10, 1, 0, 0, 0},
-	{"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 6, 6, 1, 0, 0, 0},
-	{"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 7, 6, 1, 0, 0, 0},
-	{"xor", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 8, 6, 1, 0, 0, 0},
-	{"zjmp", 1, {T_DIR}, 9, 20, 0, 1, 0, 0},
-	{"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 10, 25, 1, 1, 0, 0},
-	{"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 11, 25, 1, 1, 0, 0},
-	{"fork", 1, {T_DIR}, 12, 800, 0, 1, 0, 0},
-	{"lld", 2, {T_DIR | T_IND, T_REG}, 13, 10, 1, 0, 0, 0},
-	{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 14, 50, 1, 1, 0, 0},
-	{"lfork", 1, {T_DIR}, 15, 1000, 0, 1, 0, 0},
-	{"aff", 1, {T_REG}, 16, 2, 1, 0, 0, 0},
-	{0, 0, {0}, 0, 0, 0, 0, 0, 0}
+	{"live", 1, {T_DIR}, 1, 10, 0, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, 1, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"st", 2, {T_REG, T_IND | T_REG}, 3, 5, 1, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"add", 3, {T_REG, T_REG, T_REG}, 4, 10, 1, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"sub", 3, {T_REG, T_REG, T_REG}, 5, 10, 1, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 6, 6, 1, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 7, 6, 1, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"xor", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 8, 6, 1, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"zjmp", 1, {T_DIR}, 9, 20, 0, 1, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 10, 25, 1, 1, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0 ,0},
+	{"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 11, 25, 1, 1, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"fork", 1, {T_DIR}, 12, 800, 0, 1, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"lld", 2, {T_DIR | T_IND, T_REG}, 13, 10, 1, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 14, 50, 1, 1, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"lfork", 1, {T_DIR}, 15, 1000, 0, 1, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{"aff", 1, {T_REG}, 16, 2, 1, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0},
+	{0, 0, {0}, 0, 0, 0, 0, {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, 0, 0}
 };
 
 int ft_find_command(t_form *assm, char *line)
@@ -350,9 +351,192 @@ void ft_add_command(t_form *assm, char *line, int i, char *labtmp)
 		ptr->label = ft_strdup(labtmp);
 	else
 		ptr->label = NULL;
+	ft_arguments(ptr, line + i, assm->i_cmd);
 	ptr->next = (*assm->com);
 	*assm->com = ptr;
 	assm->is_cmd++;
+}
+
+void ft_arguments(t_op *ptr, char *line, int com_num)
+{
+	char **args;
+
+	args = ft_get_arguments(ptr, line);
+	
+	ft_arg_validate(args, ptr, 0, com_num);
+}
+
+void ft_arg_validate(char **args, t_op *ptr, int i, int cnum)
+{
+	int tmp[3] = {0, 0, 0};
+
+	while (args[i])
+	{
+		if (args[i][0] == 'r' && ft_atoi(&args[i][1]) >= 1 && ft_atoi(&args[i][1]) <= 16)
+			tmp[i] = T_REG;
+		else if (args[i][0] == '%' && (args[i][1] == ':' || \
+		args[i][1] == '-' || ft_isdigit(args[i][1])))
+			tmp[i] = T_DIR;
+		else if (ft_isdigit(args[i][0]) || (args[i][1] == '-' && ft_isdigit(args[i][1])) \
+		|| (args[i][0] == ':'))
+			tmp[i] = T_IND;
+		else
+			tmp[i] = 42;
+		i++;
+	}
+	i = 0;
+	while (tmp[i])
+	{
+		if (tmp[i] == 42)
+			ft_error("argument");
+		i++;
+	}
+	ft_parsing_arg(tmp, args, ptr, cnum);
+}
+
+void	ft_parsing_arg(int *tmp, char **args, t_op *ptr, int i)
+{
+	int j;
+
+	j = 0;
+	while (args[j])
+	{
+		if (tmp[j] == T_REG && op_tab[i].args[j] % 2 != 0 )
+			ft_REG(args[j], j, ptr);
+		else if (tmp[j] == T_DIR && op_tab[i].args[j] != 1 && op_tab[i].args[j] != 4 && op_tab[i].args[j] != 5 )
+			ft_DIR(args[j], j, ptr, 1);
+		else if (tmp[j] == T_IND && op_tab[i].args[j] != 1 && op_tab[i].args[j] != 2)
+			ft_IND(args[j], j, ptr);
+		else
+			ft_error("argument");
+		j++;
+	}	
+}
+
+void ft_REG(char *args, int i, t_op *ptr)
+{
+	int k;
+	int value;
+
+	k = 1;
+	if (args[0] != 'r')
+		ft_error("argument");
+	while (args[k] != '\0')
+	{
+		if (ft_isdigit(args[k]) == 0)
+			ft_error("argument");
+		k++;
+	}
+	value = ft_atoi(args + 1);
+	if (value < 1 || value > 16)
+		ft_error("argument");
+	ptr->arg[i].type = 1;
+	ptr->arg[i].val = value;
+	ptr->arg[i].labe = NULL;
+}
+
+void ft_DIR(char *args, int i, t_op *ptr, int k)
+{
+	long int value;
+	
+	if (args[0] != '%')
+		ft_error("argument");
+	if (args[1] == ':')
+		ft_label_arg(args, i, ptr, 1);
+	else
+	{
+		if (args[1] == '-')
+			k = 2;
+		while (args[k] != '\0')
+		{
+			if (ft_isdigit(args[k]) == 0)
+				ft_error("argument");
+			k++;
+		}
+		value = ft_atoi(args + 1);
+		if (value > 4294967295)
+			ft_error("argument");
+		ptr->arg[i].type = DIR_SIZE;
+		ptr->arg[i].val = value;
+		ptr->arg[i].labe = NULL;
+	}
+}
+
+void ft_label_arg(char *args, int i, t_op *ptr, int k)
+{
+	char *str;
+	int j;
+
+	j = 0;
+	while (args[j] != ':')
+		j++;
+	str = ft_strdup(args + j + 1);
+	j = 0;
+	while (str[j] != '\0')
+	{
+		if (ft_strchr(LABEL_CHARS, str[j]) == 0)
+			ft_error("argument label");
+		j++;
+	}
+	ptr->arg[i].labe = ft_strdup(str);
+	if (k == 1)
+	{	
+		ptr->arg[i].type = op_tab[i].labelsize;
+		ptr->arg[i].val = 42;
+	}
+	ft_strdel(&str);
+}
+
+void ft_IND(char *args, int i, t_op *ptr)
+{
+	int k;
+	int value;
+
+	value = 0;	
+	k = 0;
+	if (args[0] == ':')
+		ft_label_arg(args, i, ptr, 0);
+	else
+	{
+		if (args[0] == '-')
+			k = 1;
+		while (args[k] != '\0')
+		{
+			if (ft_isdigit(args[k]) == 0)
+				ft_error("argument");
+			k++;
+		}
+		value = ft_atoi(args);
+		ptr->arg[i].labe = NULL;
+	}
+	ptr->arg[i].type = IND_SIZE;
+	ptr->arg[i].val = value;
+}
+
+char **ft_get_arguments(t_op *ptr, char *line)
+{
+	int i;
+	char *arg;
+	char **argument;
+
+	i = 0;
+	while (line[i] != '#' && line[i] != ';' && line[i] != '\0')
+		i++;
+	arg = ft_strsub(line, 0, i);
+	argument = ft_strsplit(arg, ',');
+	ft_strdel(&arg);
+	if (argument[ptr->argc] != NULL)
+		ft_error("argument");
+	i = 0;
+	while (argument[i])
+	{
+		arg = ft_strtrim(argument[i]);
+		ft_strdel(&argument[i]);
+		argument[i] = ft_strdup(arg);
+		ft_strdel(&arg);
+		i++;
+	}
+	return (argument);
 }
 
 char *ft_label_valid(t_form *assm, int *i, char *line)

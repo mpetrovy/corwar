@@ -9,16 +9,23 @@ typedef struct s_l
 	struct s_l *next;
 }				t_l;
 
+typedef	struct	s_ar
+{
+	int	type;
+	long int	val;
+	char *labe;
+}				t_ar;
 
 typedef struct s_op
 {
 	char *name;
 	int argc;
-	int arguments[3];
+	int args[3];
 	int opcode;
 	int cycles;
 	int codage;
 	int labelsize;
+	t_ar arg[3];
 	char *label;
 	struct s_op *next;
 }				t_op;
@@ -57,3 +64,11 @@ void ft_add_command(t_form *assm, char *line, int i, char *labtmp);
 char *ft_label_valid(t_form *assm, int *i, char *line);
 int ft_find_label(t_form *assm, char *line);
 int ft_space_line(char *line);
+void ft_arguments(t_op *ptr, char *line, int com_num);
+char **ft_get_arguments(t_op *ptr, char *line);
+void ft_arg_validate(char **args, t_op *ptr, int i, int cnum);
+void	ft_parsing_arg(int *tmp, char **arg, t_op *ptr, int i);
+void ft_REG(char *args, int i, t_op *ptr);
+void ft_DIR(char *args, int i, t_op *ptr, int k);
+void ft_IND(char *args, int i, t_op *ptr);
+void ft_label_arg(char *args, int i, t_op *ptr, int k);
