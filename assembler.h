@@ -14,6 +14,7 @@ typedef	struct	s_ar
 	int	type;
 	long int	val;
 	char *labe;
+	char *bin;
 }				t_ar;
 
 typedef struct s_op
@@ -21,12 +22,13 @@ typedef struct s_op
 	char *name;
 	int argc;
 	int args[3];
-	int opcode;
-	int cycles;
-	int codage;
+	int hex;
 	int labelsize;
 	t_ar arg[3];
 	char *label;
+	int bytes;
+	int codage;
+	char *cod;
 	struct s_op *next;
 }				t_op;
 
@@ -72,3 +74,10 @@ void ft_REG(char *args, int i, t_op *ptr);
 void ft_DIR(char *args, int i, t_op *ptr, int k);
 void ft_IND(char *args, int i, t_op *ptr);
 void ft_label_arg(char *args, int i, t_op *ptr, int k);
+int ft_tabs(t_form *assm, char *str, int i, int *k);
+void ft_com_init(t_op *ptr, t_form *assm, char *labtmp);
+void ft_bytes(t_op *ptr);
+void ft_set_code(t_op *ptr);
+int ft_atoi_base(const char *str, int str_base);
+int	base(int c, int base);
+int		ft_isspace(char const c);
