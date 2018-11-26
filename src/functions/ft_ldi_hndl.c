@@ -1,5 +1,16 @@
 #include "vm.h"
 
+// static void ft_flag_ldi_show(t_env *e, t_carr *car)
+// {
+// 	if ((e->flag_num & 4) == 4)
+// 	{
+// 		printf("P%5d | ldi %d %d r%d\n", car->car_index, value[FIRST_ARG], value[SECOND_ARG], ps->arg[2]);
+// 		printf("       | -> load from %d + %d = %d", value[FIRST_ARG],
+// 			value[SECOND_ARG], value[FIRST_ARG] + value[SECOND_ARG]);
+// 		printf(" (with pc and mod %d)\n", pc);
+// 	}
+// }
+
 static void	ft_ind_handle(t_env *e, t_carr *car, t_get *f)
 {
 	int pos;
@@ -11,13 +22,13 @@ static void	ft_ind_handle(t_env *e, t_carr *car, t_get *f)
 	pos = car->cur_pos + 2;
 	val1 = ft_get_value(e, pos, 2);
 	pos += 2;
-	// printf("val1 = %x\n", val1);
+	printf("val1 = %x\n", val1);
 	val1 = ft_get_value(e, (val1 % IDX_MOD) + car->cur_pos, 4);
-	// printf("val1 next = %x\n", val1);
+	printf("val1 next = %x\n", val1);
 	value = car->cur_pos + ((val1 + f[car->args[1]](e, car, &pos)) % IDX_MOD);
-	// printf("value %x\n", value);
+	printf("value %x\n", value);
 	value = ft_get_value(e, value, 4);
-	// printf("this value %x reg = %x\n", value, e->fild[pos]);
+	printf("this value %x reg = %x\n", value, e->fild[pos]);
 	car->reg[e->fild[pos]] = value;
 	// printf("reg = %x\n", car->reg[e->fild[pos]]);
 	car->cur_pos = pos + 1;

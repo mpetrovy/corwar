@@ -17,30 +17,30 @@ int	ft_check_valid(t_env *e, t_carr *car, int arg)
 	int i;
 	unsigned char nbr;
 
-	printf("command this %d\n", car->command);
+	//printf("command this %d\n", car->command);
 	if (e->funcs[car->command].acb == 0)
 	{
-		printf("we are here\n");
+		//printf("we are here\n");
 		return (1);// обработать смещение карретки в соотвествие с ее кол-вом аргументов
 	}
 	nbr = e->fild[car->cur_pos + 1];
-	printf("nbr = %x\n", nbr);
+	//printf("nbr = %x\n", nbr);
 	i = 0;
 	while (i < arg)
 	{
 		if (((nbr >> (6 - i * 2) & 3) == REG_CODE) && (e->funcs[car->command].arg_t[i] & T_REG) == T_REG)
 		{
-			printf("REG\n");
+		//	printf("REG\n");
 			car->args[i] = REG_CODE;
 		}
 		else if (((nbr >> (6 - i * 2) & 3) == DIR_CODE) && (e->funcs[car->command].arg_t[i] & T_DIR) == T_DIR)
 		{
-			printf("DIR\n");
+			//printf("DIR\n");
 			car->args[i] = DIR_CODE;
 		}
 		else if (((nbr >> (6 - i * 2) & 3) == IND_CODE) && (e->funcs[car->command].arg_t[i] & T_IND) == T_IND)
 		{
-			printf("IND\n");
+			//printf("IND\n");
 			car->args[i] = IND_CODE;
 		}
 		else
@@ -85,7 +85,7 @@ void	ft_handle_command(t_env *e, t_carr *car)
 		{
 			if (ft_check_valid(e, car, e->funcs[car->command].args))
 			{
-				printf("command %d\n", car->command);
+				//printf("command %d\n", car->command);
 				g_func[car->command](e, car);
 				car->command = 0;
 			}

@@ -16,14 +16,8 @@ static void	ft_flag_fork_show(t_env *e, t_carr *car, unsigned int value)
 {
 	if ((e->flag_num & 4) == 4)
 	{
-		ft_putchar('P');
-		ft_putstr(" ");
-		ft_putnbr(car->car_index);
-		ft_putstr(" | fork ");
-		ft_putnbr(value);
-		ft_putstr(" (");
-		ft_putnbr(car->cur_pos + (value % IDX_MOD));
-		ft_putstr(")\n");
+		printf("P%5d | fork %u (%d)\n", car->car_index, value,
+		car->cur_pos + (value % IDX_MOD));
 	}
 }
 
@@ -70,7 +64,6 @@ void	ft_fork_hndl(t_env *e, t_carr *car)
 	ft_flag_fork_show(e, car, value);
 	ft_adv_show(e, car, step);
 	car->cur_pos += step;
-	exit(0);
 	printf("%x %x %x %x\n", e->fild[car->cur_pos], e->fild[car->cur_pos + 1], e->fild[car->cur_pos + 2], e->fild[car->cur_pos + 3]);
 	// exit (0);
 }

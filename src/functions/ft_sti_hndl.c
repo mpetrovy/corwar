@@ -4,8 +4,8 @@ static void	ft_flag_sti_show(t_env *e, t_carr *car, int reg, unsigned int val1, 
 {
 	if ((e->flag_num & 4) == 4)
 	{
-		printf("P   %d | sti r%d %u %u\n", car->car_index, reg, val1, val2);
-		printf("      | -> store to %u + %u = %u (with pc and mod %u)\n",
+		printf("P%5d | sti r%d %u %u\n", car->car_index, reg, val1, val2);
+		printf("       | -> store to %u + %u = %u (with pc and mod %u)\n",
 			val1, val2, val1 + val2, val1 + val2);
 	}
 }
@@ -18,7 +18,7 @@ static void ft_ind_sec(t_env *e, t_carr *car)
 	int reg;
 	int i;
 
-	printf("TESTING NEEDED ALARM ALARM\n");
+	//printf("TESTING NEEDED ALARM ALARM\n");
 	car->reg[1] = 0xffffffff; // find out how to make initialization
 	reg = e->fild[car->cur_pos + 2];
 	pos = car->cur_pos + 3;

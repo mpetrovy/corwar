@@ -28,14 +28,10 @@ static int	ft_check_compere(t_env *e, unsigned int id)
 
 static void	ft_flag_live_show(t_env *e, t_carr *car, unsigned int num_plr, int player)
 {
-	if ((e->flag_num & 4) == 4)
-	{
-		printf("P   %d | live %u\n", car->car_index, num_plr);
-	}
-	if ((e->flag_num & 1) == 1)
-	{
+	if (player == 0 && (e->flag_num & 4) == 4)
+		printf("P%5d | live %u\n", car->car_index, num_plr);
+	else if (num_plr == 0 && (e->flag_num & 1) == 1)
 		printf("Player %d (%s) is said to be alive\n", player, e->plrs[player].head.prog_name);
-	}
 }
 
 void	ft_live_hndl(t_env *e, t_carr *car)

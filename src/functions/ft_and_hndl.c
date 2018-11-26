@@ -3,7 +3,7 @@
 static void	ft_flag_and_show(t_env *e, t_carr *car, int reg, unsigned int val1, unsigned int val2)
 {
 	if ((e->flag_num & 4) == 4)
-		printf("P   %d | and %d %u r%d\n", car->car_index, val1, val2, reg);
+		printf("P%5d | and %d %u r%d\n", car->car_index, val1, val2, reg);//change on ft_printf
 }
 
 void	ft_and_hndl(t_env *e, t_carr *car)

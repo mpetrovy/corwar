@@ -15,7 +15,6 @@
 
 # include "op.h"
 # include "libft.h"
-# include "ft_printf.h"
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdio.h>//delete after all
@@ -56,6 +55,13 @@ typedef struct 			s_carlist
 	t_carr				carr;
 	struct s_carlist	*next;
 }						t_carlist;
+
+typedef struct			s_registers
+{
+	unsigned int		reg1;
+	unsigned int		reg2;
+	unsigned int		reg3;
+}						t_registers;
 
 typedef struct 		s_env
 {

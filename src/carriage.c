@@ -37,15 +37,15 @@ void	ft_init_carriage(t_env *e)
 	short i;
 	t_carlist *begin;
 
-	printf("Work here\n");
+	//printf("Work here\n");
 	i = 1;
 	e->head = ft_create_car(e, e->plrs[0].plr_pos, 0, e->plrs[0].n_numb);
 	begin = e->head;
-	printf("player id = %d| flag -n value = %u\n", 0, e->head->carr.reg[0]);
+	//printf("player id = %d| flag -n value = %u\n", 0, e->head->carr.reg[0]);
 	while (i < e->plr_numb)
 	{
 		e->head->next = ft_create_car(e, e->plrs[i].plr_pos, i, e->plrs[i].n_numb);
-		printf("player id = %d| flag -n value = %u\n", i, e->head->next->carr.reg[0]);
+		//printf("player id = %d| flag -n value = %u\n", i, e->head->next->carr.reg[0]);
 		e->head = e->head->next;
 		i++;
 	}
