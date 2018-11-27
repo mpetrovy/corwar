@@ -36,7 +36,7 @@ void	ft_set_data(t_env *e)
 	e->cycle_to_die = CYCLE_TO_DIE;
 	e->cur_cycle = 0;
 	e->lives = 0;
-	e->winner = e->plrs[e->plr_numb].n_numb;
+	e->winner = e->plr_numb;
 	e->checks = 0;
 	//e->cursors = 0; //maybe delete
 	e->carriage_index = 1;

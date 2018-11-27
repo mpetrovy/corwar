@@ -49,7 +49,7 @@ static void	ft_ind_first(t_env *e, t_carr *car)
 
 void	ft_lld_hndl(t_env *e, t_carr *car)
 {
-	printf("LLD HANDLER\n");
+	//printf("LLD HANDLER\n");
 	if (car->args[0] == DIR_CODE)
 		ft_dir_first(e, car);
 	else

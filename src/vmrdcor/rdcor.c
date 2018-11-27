@@ -21,12 +21,13 @@ static void	ft_write_code(t_plr *p, unsigned char *buf, int i)
 {
 	unsigned int j;
 
-	if (!(p->code = (unsigned char*)malloc(sizeof(unsigned char) * (p->head.prog_size+1))))
-		return ;
-
 	j = 0;
+	if (!(p->code = (unsigned char*)malloc(sizeof(unsigned char) * (p->head.prog_size))))
+		return ;
 	while (j < p->head.prog_size)
+	{
 		p->code[j++] = buf[i++];
+	}
 	if (i != p->file_size)
 		ft_error(p->file_name, "file is more then shown");
 }
@@ -92,10 +93,12 @@ void	ft_read_cor(t_env *e, int ac)
 
 	(void)ac;
 	i = 0;
-	//printf("ac %d\n", ac);
+	printf("Introducing contestants...\n");
 	while (i < e->plr_numb)
 	{
 		ft_read(&e->plrs[i]);
+		printf("* Player %d, weighing %u bytes, \"%s\" (\"%s\") !\n", i + 1,
+		e->plrs[i].head.prog_size, e->plrs[i].head.prog_name, e->plrs[i].head.comment);// change to ft_printf();
 		i++;
 	}
 

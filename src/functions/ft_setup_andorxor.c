@@ -6,7 +6,8 @@ void ft_adv_show(t_env *e, t_carr *car, unsigned int step)
 
 	if ((e->flag_num & 16) == 16)
 	{
-		printf("ADV %u (%#.4x -> %#.4x) ", step, car->cur_pos, car->cur_pos + step);//such write
+		printf("ADV %u (%s%#.4x -> %#.4x) ", step, ((car->cur_pos == 0) ? ("0x") : ("")),
+		car->cur_pos, car->cur_pos + step);//such write
 		i = car->cur_pos;
 		while (step)
 		{

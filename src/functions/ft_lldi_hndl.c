@@ -6,7 +6,7 @@ static void	ft_ind_handle(t_env *e, t_carr *car, t_get *f)
 	unsigned int value;
 	unsigned int val1;
 
-	printf("work ind firsc\n");
+//	printf("work ind firsc\n");
 	ft_set_f(f);
 	pos = car->cur_pos + 2;
 	val1 = ft_get_value(e, pos, 2);
@@ -51,7 +51,7 @@ void	ft_lldi_hndl(t_env *e, t_carr *car)
 	car->reg[1] = 5;
 	car->reg[2] = 6;
 	car->reg[3] = 9;
-	printf("LDI HANDLER\n");
+	//printf("LDI HANDLER\n");
 	if (car->args[0] == IND_CODE)
 		ft_ind_handle(e, car, f);
 	else

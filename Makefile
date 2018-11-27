@@ -19,7 +19,7 @@ SRC = src
 
 CFLAGS = -Wall -Werror -Wextra
 
-CC = gcc
+CC = gcc -g
 
 LIB_FILES = ./includes/libft/
 VIRTM_FILES =  src/vmain.c \
@@ -28,6 +28,8 @@ VIRTM_FILES =  src/vmain.c \
 			   src/carriage.c \
 			   src/carrun.c \
 			   src/parsing.c \
+			   src/flag_debug.c \
+			   src/move_carriage.c \
 			   src/validation/filevalid.c \
 			   src/initialization.c \
 			   src/error_handler/file_err_hndl.c \

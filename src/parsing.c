@@ -41,16 +41,27 @@ static int	ft_check_flags(t_env *e, int ac, char **av, int p, int *i)
 	return (1);
 }
 
-int			ft_check_vflag(char **av, int *i)
+static void	ft_check_vflag(t_env *e, char **av, int *i)
 {
 	if (!ft_strcmp(av[*i], "-v"))
 	{
 		//printf("flag = %s\n", av[*i]);
-		(*i)++;
+		if (av[++(*i)] == NULL)
+			ft_error("", "can't read source file -v");
 		//printf("value = %s\n", av[*i]);
-		return (ft_atoi(av[(*i)++]));
+		e->flag_num = ft_atoi(av[(*i)]);
 	}
-	return (0);
+	else if (!ft_strcmp(av[*i], "-d"))
+	{
+		//printf("d flag = %s\n", av[*i]);
+		if (av[++(*i)] == NULL)
+			ft_error("", "can't read source file -d");
+		//printf("d value = %s\n", av[*i]);
+		e->dump = ft_atoi(av[(*i)]);
+		//printf("dump			%d\n", e->dump);
+	}
+	
+	//printf("last value = %s\n", av[*i]);
 }
 
 void		ft_parse_input(t_env *e, int ac, char **av)
@@ -65,12 +76,13 @@ void		ft_parse_input(t_env *e, int ac, char **av)
 	while (i < ac)
 	{
 		e->plrs[p].n_numb = 0;
-		if (!ft_strcmp(av[i], "-n") || !ft_strcmp(av[i], "-v"))
+		if (!ft_strcmp(av[i], "-n") || !ft_strcmp(av[i], "-v") || !ft_strcmp(av[i], "-d"))
 		{
 			res = ft_check_flags(e, ac, av, p, &i);
-			e->flag_num = ft_check_vflag(av, &i);
+			ft_check_vflag(e, av, &i);
+			//printf("back last value = %s\n", av[i]);
 		}
-		if (i != ac && ft_valid_file(av[i]))
+		else if (i != ac && ft_valid_file(av[i]))
 		{
 			if (!res)
 				e->plrs[p].n_numb = 4294967295 - p;

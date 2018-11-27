@@ -12,18 +12,30 @@
 
 #include "vm.h"
 
+static void ft_clean_reg(unsigned int *arr)
+{
+	int i;
+
+	i = 0;
+	while (i < REG_NUMBER + 1)
+	{
+		arr[i] = 0;
+		i++;
+	}
+} 
+
 static t_carlist	*ft_create_car(t_env *e, unsigned int pos, short i, unsigned int nbr)
 {
 	t_carlist *lst;
 
 	if (!(lst = (t_carlist*)malloc(sizeof(t_carlist))))
 		return (NULL);
+	ft_clean_reg(lst->carr.reg);
 	lst->carr.cur_pos = pos;
 	lst->carr.player = i;
 	lst->carr.carry = 0;
 	lst->carr.car_index = e->carriage_index;
-	lst->carr.reg[0] = nbr;
-	lst->carr.killed = 0;
+	lst->carr.reg[1] = nbr;
 	lst->carr.alive = 0;
 	lst->carr.command = 0;
 	lst->carr.cycles = 0;
@@ -36,6 +48,7 @@ void	ft_init_carriage(t_env *e)
 {
 	short i;
 	t_carlist *begin;
+	t_carlist *tmp;
 
 	//printf("Work here\n");
 	i = 1;
@@ -44,10 +57,11 @@ void	ft_init_carriage(t_env *e)
 	//printf("player id = %d| flag -n value = %u\n", 0, e->head->carr.reg[0]);
 	while (i < e->plr_numb)
 	{
-		e->head->next = ft_create_car(e, e->plrs[i].plr_pos, i, e->plrs[i].n_numb);
+		tmp = ft_create_car(e, e->plrs[i].plr_pos, i, e->plrs[i].n_numb);
+		tmp->next = e->head;
+		e->head = tmp;
 		//printf("player id = %d| flag -n value = %u\n", i, e->head->next->carr.reg[0]);
-		e->head = e->head->next;
 		i++;
 	}
-	e->head = begin;
+	//e->head = begin;
 }

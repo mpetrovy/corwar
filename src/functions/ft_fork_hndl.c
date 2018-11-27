@@ -35,7 +35,8 @@ static void	ft_add_cursor(t_env *e, t_carr *car, unsigned int pos)
 	lst->carr.carry = car->carry;
 	ft_copy(lst->carr.reg, car->reg);
 	//lst->carr.reg[0] = car->reg[0];
-	lst->carr.killed = car->killed;
+	//printf("live %d\n", car->alive);
+	// lst->carr.killed = car->killed;
 	lst->carr.alive = car->alive;
 	lst->carr.command = 0;
 	lst->carr.cycles = 0;
@@ -50,20 +51,20 @@ void	ft_fork_hndl(t_env *e, t_carr *car)
 	unsigned int	step;
 
 	step = 3;
-	printf("flag %d\n", e->flag_num);
-	printf("fork working\n"); //delete
+	// printf("flag %d\n", e->flag_num);
+	// printf("fork working\n"); //delete
 	value = ft_get_value(e, car->cur_pos + 1, 2);
 	//printf("P %d | fork %u ()\n", car->car_index, value);
 	ft_add_cursor(e, car, value);
 	//e->cursors += 1;
-	printf("value %x\n", value);
-	printf("num car %d\n", e->head->carr.car_index);
-	printf("num car next %d\n", e->head->next->carr.car_index);
-	printf("value = %x, %x\n", e->head->carr.cur_pos, e->fild[e->head->carr.cur_pos]);
+	// printf("value %x\n", value);
+	// printf("num car %d\n", e->head->carr.car_index);
+	// printf("num car next %d\n", e->head->next->carr.car_index);
+	// printf("value = %x, %x\n", e->head->carr.cur_pos, e->fild[e->head->carr.cur_pos]);
 	//printf("cursor = %d\n", e->cursors);
 	ft_flag_fork_show(e, car, value);
 	ft_adv_show(e, car, step);
 	car->cur_pos += step;
-	printf("%x %x %x %x\n", e->fild[car->cur_pos], e->fild[car->cur_pos + 1], e->fild[car->cur_pos + 2], e->fild[car->cur_pos + 3]);
-	// exit (0);
+	// printf("%x %x %x %x\n", e->fild[car->cur_pos], e->fild[car->cur_pos + 1], e->fild[car->cur_pos + 2], e->fild[car->cur_pos + 3]);
+	//exit (0);
 }
