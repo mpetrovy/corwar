@@ -3,36 +3,37 @@
 
 #include "assembler.h"
 
-// int main()//int argc, char **argv)
-// {
-// 	char *line;
-// 	t_form assm;
-
-// 	line = NULL;
-// 	// if (argc != 2 && ft_strstr(argv[1], ".s"))
-// 	// 	return (0);
-// 	assm.fd = open("123", O_RDONLY);
-// 	if (assm.fd <= -1)
-// 		return (0);
-// 	ft_zero(&assm);
-// 	ft_reader(&assm, line);
-// 	//ft_write(&assm);
-// }
-
-int main(int argc, char **argv)
+int main()//int argc, char **argv)
 {
 	char *line;
 	t_form assm;
 
 	line = NULL;
-	if (argc != 2 || !ft_strstr(argv[1], ".s"))
-	 	ft_error("file");
-	assm.fd = open(argv[1], O_RDONLY);
+	// if (argc != 2 && ft_strstr(argv[1], ".s"))
+	// 	return (0);
+	assm.fd = open("123", O_RDONLY);
 	if (assm.fd <= -1)
-		ft_error("file");
+		return (0);
 	ft_zero(&assm);
 	ft_reader(&assm, line);
+	close(assm.fd);
+	ft_write(&assm, "zork.s");
 }
+
+// int main(int argc, char **argv)
+// {
+// 	char *line;
+// 	t_form assm;
+
+// 	line = NULL;
+// 	if (argc != 2 || !ft_strstr(argv[1], ".s"))
+// 	 	ft_error("file");
+// 	assm.fd = open(argv[1], O_RDONLY);
+// 	if (assm.fd <= -1)
+// 		ft_error("file");
+// 	ft_zero(&assm);
+// 	ft_reader(&assm, line);
+// }
 
 void ft_zero(t_form *assm)
 {
@@ -44,6 +45,7 @@ void ft_zero(t_form *assm)
 	assm->is_com = 1;
 	assm->hash = 0;
 	assm->i = 0;
+	assm->is_l = 0;
 }
 
 void ft_reader(t_form *assm, char *line)
@@ -71,6 +73,192 @@ void ft_reader(t_form *assm, char *line)
 			ft_error("file");
 }
 
+void ft_write(t_form *assm, char *fname)
+{
+	char *file;
+	unsigned long i;
+
+	i = 0;
+	ft_set_label(assm);
+	file = ft_strsub(fname, 0, ft_strlen(fname) - 2);
+	file = ft_strjoin(file, ".cor");
+	assm->fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+	ft_write_bit(assm, COREWAR_EXEC_MAGIC, 4, 4);
+	while (assm->name[i] != '\0')
+	{
+		ft_write_bit(assm, assm->name[i], 1, 1);
+		i++;
+	}
+	i = 0;
+	while (i < 132 - ft_strlen(assm->name))
+	{
+		ft_write_bit(assm, 0, 1, 1);
+		i++;
+	}
+	ft_write_comment(assm);
+	ft_write_command(assm);
+}
+
+void			ft_write_bit(t_form *assm, int c, int bit, int i)
+{
+	unsigned char	table[bit];
+
+	while (bit)
+	{
+		bit--;
+		table[bit] = (unsigned char)c;
+		c >>= 8;
+	}
+	while (bit < i)
+	{
+		write(assm->fd, &table[bit], 1);
+		bit++;
+	}
+}
+
+void ft_write_command(t_form *assm)
+{
+	t_op *ptr;
+	int i;
+
+	ptr = *assm->com;
+	while (ptr != NULL)
+	{
+		ft_write_bit(assm, ptr->hex, 1, 1);
+		if (ptr->codage == 1)
+			ft_write_bit(assm, ptr->cod, 1, 1);
+		i = 0;
+		while (ptr->arg[i].type && i <= 2)
+		{
+			if (ptr->arg[i].labe != NULL)
+			{
+				if (ptr->label_code > 0)
+					ft_write_bit(assm, ptr->label_code, ptr->arg[i].type , ptr->arg[i].type);
+				else
+					ft_write_bit(assm, 4294967295 + ptr->label_code, ptr->arg[i].type , ptr->arg[i].type);
+			}
+			else
+				ft_write_bit(assm, ptr->arg[i].val, ptr->arg[i].type , ptr->arg[i].type);
+			i++;
+		}
+		ptr = ptr->next;
+	}
+}
+void ft_write_comment(t_form *assm)
+{
+	unsigned long i;
+
+	i = 0;
+	ft_size(assm);
+	while (assm->comment[i] != '\0')
+	{
+		ft_write_bit(assm, assm->comment[i], 1, 1);
+		i++;
+	}
+	i = 0;
+	while (i < 2052 - ft_strlen(assm->comment))
+	{
+		ft_write_bit(assm, 0, 1, 1);
+		i++;
+	}
+}
+
+void ft_size(t_form *assm)
+{
+	t_op *ptr;
+	int size;
+
+	size = 0;
+	ptr = *assm->com;
+	while (ptr != NULL)
+	{
+		size = size + ptr->bytes;
+		ptr = ptr->next;
+	}
+	ft_write_bit(assm, size, 4, 4);
+}
+
+void ft_set_label(t_form *assm)
+{
+	t_op *ptr;
+	int i;
+	int number;
+
+	number = 0;
+	ptr = *assm->com;
+	while (ptr != NULL)
+	{
+		i = 0;
+		while (ptr->arg[i].type && i <= 2)
+		{
+			if (ptr->arg[i].labe != NULL)
+				ft_label_in_list(assm, ptr, ptr->arg[i].labe, number);
+			i++;
+		}
+		number = number + ptr->bytes;
+		ptr = ptr->next;
+	}
+}
+
+void ft_label_in_list(t_form *assm, t_op *ptr, char *str, int number)
+{
+	t_op *tmp;
+	t_l *node;
+	int nbr_bytes;
+	int check;
+
+	check = 0;
+	tmp = *assm->com;
+	nbr_bytes = 0;
+	while (tmp != NULL)
+	{
+		if (tmp->label)
+		{
+			node = *tmp->label;
+			while (node != NULL)
+			{
+				if (node->lab != NULL)
+					if (ft_strcmp(str, node->lab) == 0)
+					{
+						check = 1;
+						break;
+					}
+				node = node->next;				
+			}
+		}
+		if (check == 1)
+			break;
+		nbr_bytes = nbr_bytes + tmp->bytes;
+		tmp = tmp->next;
+	}
+	check = ft_check_label_end(assm, str);
+	if (tmp != NULL || check == 42)
+	{
+		if (nbr_bytes > number)
+			ptr->label_code = (nbr_bytes - number + 2);
+		else
+			ptr->label_code = -1 * (number - nbr_bytes);
+	}
+	else
+		ft_error("no label");
+}
+
+int ft_check_label_end(t_form *assm, char *str)
+{
+	t_l *ptr;
+	
+	if ((*assm->labels)->lab != NULL)
+	{
+		ptr = *assm->labels;
+		while (ptr != NULL)
+		{
+			if (ft_strcmp(str, ptr->lab) == 0)
+				return (42);
+			ptr = ptr->next;
+		}
+	}
+	return (0);
+}
 int ft_space_line(char *line)
 {
 	int i;
@@ -229,23 +417,23 @@ char *ft_comment_next(t_form *assm, char *line, int k)
 
 t_op    op_tab[17] =
 {
-	{"live", 1, {T_DIR}, 0x01, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0 , 0, 0, 0},
-	{"ld", 2, {T_DIR | T_IND, T_REG}, 0x02, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{"st", 2, {T_REG, T_IND | T_REG}, 0x03, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{"add", 3, {T_REG, T_REG, T_REG}, 0x04, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{"sub", 3, {T_REG, T_REG, T_REG}, 0x05, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 0x06, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 0x07, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{"xor", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 0x08, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{"zjmp", 1, {T_DIR}, 0x09, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 0, 0, 0},
-	{"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 0x0A, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0 ,0, 1, 0, 0},
-	{"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 0x0B, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{"fork", 1, {T_DIR}, 0x0C, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 0, 0, 0},
-	{"lld", 2, {T_DIR | T_IND, T_REG}, 0x0D, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 0x0E, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{"lfork", 1, {T_DIR}, 0x0F, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 0, 0, 0},
-	{"aff", 1, {T_REG}, 0x10, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0},
-	{0, 0, {0}, 0, 0, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 0, 0, 0}
+	{"live", 1, {T_DIR}, 0x01, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0 , 0, 0, 0, 0},
+	{"ld", 2, {T_DIR | T_IND, T_REG}, 0x02, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{"st", 2, {T_REG, T_IND | T_REG}, 0x03, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{"add", 3, {T_REG, T_REG, T_REG}, 0x04, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{"sub", 3, {T_REG, T_REG, T_REG}, 0x05, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 0x06, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 0x07, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{"xor", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 0x08, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{"zjmp", 1, {T_DIR}, 0x09, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 0, 0, 0, 0},
+	{"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 0x0A, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0 ,0, 1, 0, 0, 0},
+	{"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 0x0B, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{"fork", 1, {T_DIR}, 0x0C, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 0, 0, 0, 0},
+	{"lld", 2, {T_DIR | T_IND, T_REG}, 0x0D, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 0x0E, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{"lfork", 1, {T_DIR}, 0x0F, 2, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 0, 0, 0, 0},
+	{"aff", 1, {T_REG}, 0x10, 4, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 1, 0, 0, 0},
+	{0, 0, {0}, 0, 0, {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}}, 0, 0, 0, 0, 0, 0}
 };
 
 int ft_find_command(t_form *assm, char *line)
@@ -254,7 +442,6 @@ int ft_find_command(t_form *assm, char *line)
 	int j;
 	int k;
 
-	assm->is_l = 0;
 	i = 0;
 	j = ft_find_label(assm, line);
 	while (i < 16)
@@ -302,8 +489,12 @@ int ft_find_label(t_form *assm, char *line)
 char *ft_get_command(t_form *assm, char *line, int i, char *labtmp)
 {
 	if (assm->is_l == 1)
+	{
 		labtmp = ft_label_valid(assm, &i, line);
-	while (ft_find_command(assm, line) == 17)
+		ft_add_label(assm, labtmp);
+	}
+		
+	while ((assm->i_cmd = ft_find_command(assm, line)) == 17)
 	{	
 		i = 0;
 		ft_strdel(&line);
@@ -318,13 +509,38 @@ char *ft_get_command(t_form *assm, char *line, int i, char *labtmp)
 			if (labtmp != NULL)
 				ft_strdel(&labtmp);
 			labtmp = ft_label_valid(assm, &i, line);
+			ft_add_label(assm, labtmp);
 		}
 		else if (ft_find_command(assm, line) == 17 && ft_space_line(line) == 0)
 			ft_error("line");
 	}
 	if (assm->is_com != 0)
-		ft_add_command(assm, line, i, labtmp);
+		ft_add_command(assm, line, i);
+	assm->is_l = 0;
 	return (line);	
+}
+
+void ft_add_label(t_form *assm, char *labtmp)
+{
+	t_l *ptr;
+	ptr = NULL;
+
+	if (!assm->labels)
+		assm->labels = ft_memalloc(sizeof(t_l));
+	if (assm->labels && *assm->labels)
+	{
+		ptr = *assm->labels;
+		while (ptr->next)
+			ptr = ptr->next;
+		ptr->next = ft_memalloc(sizeof(t_l));
+		ptr->next->lab = ft_strdup(labtmp);
+	}
+	else
+	{
+		*assm->labels = ft_memalloc(sizeof(t_l));
+		(*assm->labels)->lab = ft_strdup(labtmp);
+		(*assm->labels)->next = ptr;
+	}
 }
 
 int ft_tabs(t_form *assm, char *str, int i, int *k)
@@ -339,7 +555,7 @@ int ft_tabs(t_form *assm, char *str, int i, int *k)
 	return (i);
 }
 
-void ft_add_command(t_form *assm, char *line, int i, char *labtmp)
+void ft_add_command(t_form *assm, char *line, int i)
 {
 	int k;
 	t_op *ptr;
@@ -353,30 +569,55 @@ void ft_add_command(t_form *assm, char *line, int i, char *labtmp)
 			ptr = ptr->next;
 		ptr->next = ft_memalloc(sizeof(t_op));
 		ptr->next->name = ft_strsub(line, k, i - k);
-		ft_com_init(ptr->next, assm, labtmp);
+		ft_com_init(ptr->next, assm);
 		ft_arguments(ptr->next, line + i, assm->i_cmd);
 	}
 	else
 	{
 		*assm->com = ft_memalloc(sizeof(t_op));
 		(*assm->com)->name = ft_strsub(line, k, i - k);
-		ft_com_init(*assm->com, assm, labtmp);
+		ft_com_init(*assm->com, assm);
 		ft_arguments(*assm->com, line + i, assm->i_cmd);
 		(*assm->com)->next = ptr;
 	}
 }
 
-void ft_com_init(t_op *ptr, t_form *assm, char *labtmp)
+void ft_com_init(t_op *ptr, t_form *assm)
 {
 	ptr->argc = op_tab[assm->i_cmd].argc;
 	ptr->hex = op_tab[assm->i_cmd].hex;
 	ptr->labelsize = op_tab[assm->i_cmd].labelsize;
 	ptr->codage = op_tab[assm->i_cmd].codage;
 	if (assm->is_l == 1)
-		ptr->label = ft_strdup(labtmp);
+		ft_label_cpy(assm, ptr);
 	else
 		ptr->label = NULL;
 	assm->is_cmd++;
+}
+
+void ft_label_cpy(t_form *assm, t_op *ptr)
+{
+	t_l *tmp;
+	t_l *start;
+
+	if (!ptr->label)
+	{
+		ptr->label = ft_memalloc(sizeof(t_l));
+		*ptr->label = NULL;
+	}
+	tmp = *assm->labels;
+	while (tmp != NULL)
+	{
+		start = ft_memalloc(sizeof(t_l));
+		if (tmp->lab)
+		{
+			start->lab = ft_strdup(tmp->lab);
+			start->next = (*ptr->label);
+			*ptr->label = start;
+			ft_strdel(&tmp->lab);
+		}
+		tmp = tmp->next;
+	}
 }
 
 void ft_arguments(t_op *ptr, char *line, int com_num)
@@ -394,13 +635,12 @@ void ft_set_code(t_op *ptr)
 {
 	int i;
 	char *code;
-	int c;
 
 	i = 1;
 	if (ptr->codage == 1)
 	{
 		code = ft_strdup(ptr->arg[0].bin);
-		while (ptr->arg[i].bin)
+		while (ptr->arg[i].bin && i <= 2)
 		{
 			code = ft_strjoin(code, ptr->arg[i].bin);
 			i++;
@@ -409,9 +649,8 @@ void ft_set_code(t_op *ptr)
 			code = ft_strjoin(code, "00");
 		else if (ft_strlen(code) == 4)
 			code = ft_strjoin(code, "0000");
-		c = ft_atoi_base(code, 2);
+		ptr->cod = ft_atoi_base(code, 2);
 		ft_strdel(&code);
-		ptr->cod = ft_itoa_base(c, 16);
 	}
 	else
 		ptr->cod = 0;
@@ -424,12 +663,12 @@ void ft_bytes(t_op *ptr)
 
 	i = 0;
 	byte_count = 0;
-	while (ptr->arg[i].type)
+	while (ptr->arg[i].type && i <= 2)
 	{
 		byte_count = byte_count + ptr->arg[i].type;
 		i++;
 	}
-	ptr->bytes = byte_count;
+	ptr->bytes = byte_count + ptr->codage;
 }
 
 
@@ -592,11 +831,20 @@ char **ft_get_arguments(t_op *ptr, char *line)
 	char *arg;
 	char **argument;
 
+
+	argument = NULL;
 	i = 0;
 	while (line[i] != '#' && line[i] != ';' && line[i] != '\0')
 		i++;
 	arg = ft_strsub(line, 0, i);
-	argument = ft_strsplit(arg, ',');
+	if (ft_strchr(arg, ',') == 0)
+	{
+		argument = ft_memalloc(sizeof(char**));
+		argument[0] = ft_strdup(arg);
+		argument[1] = NULL;
+	}
+	else
+		argument = ft_strsplit(arg, ',');
 	ft_strdel(&arg);
 	if (argument[ptr->argc] != NULL)
 		ft_error("argument");
