@@ -5,25 +5,26 @@ static t_hndl g_func[17];
 static int	ft_check_valid(t_env *e, t_carr *car, int arg)
 {
 	int i;
-	unsigned char nbr;
+	t_codage cod;
 
 	if (e->funcs[car->command].zero_code == 0)
-		return (1);// обработать смещение карретки в соотвествие с ее кол-вом аргументов
-	nbr = e->fild[car->cur_pos + 1];
+		return (1);
+	cod.nbr = e->fild[car->cur_pos + 1];
+	cod.arg = arg;
 	i = 0;
 	while (i < arg)
 	{
-		if (((nbr >> (6 - i * 2) & 3) == REG_CODE) && (e->funcs[car->command].arg_t[i] & T_REG) == T_REG)
+		if (((cod.nbr >> (6 - i * 2) & 3) == REG_CODE) && (e->funcs[car->command].arg_t[i] & T_REG) == T_REG)
 			car->args[i] = REG_CODE;
-		else if (((nbr >> (6 - i * 2) & 3) == DIR_CODE) && (e->funcs[car->command].arg_t[i] & T_DIR) == T_DIR)
+		else if (((cod.nbr >> (6 - i * 2) & 3) == DIR_CODE) && (e->funcs[car->command].arg_t[i] & T_DIR) == T_DIR)
 			car->args[i] = DIR_CODE;
-		else if (((nbr >> (6 - i * 2) & 3) == IND_CODE) && (e->funcs[car->command].arg_t[i] & T_IND) == T_IND)
+		else if (((cod.nbr >> (6 - i * 2) & 3) == IND_CODE) && (e->funcs[car->command].arg_t[i] & T_IND) == T_IND)
 			car->args[i] = IND_CODE;
 		else
-			return (0);// обработать смещение карретки в соотвествие с ее кол-вом аргументов
+			ft_check_codage(e, car, &i, &cod);
 		i++;
 	}
-	return (1);
+	return ((car->ofset) ? (0) : (1));
 }
 
 static void    ft_move_carr(t_env *e, t_carr *car)
@@ -32,17 +33,20 @@ static void    ft_move_carr(t_env *e, t_carr *car)
 	{
 		car->command = e->fild[car->cur_pos];
 		car->cycles = e->funcs[car->command].cycles - 1;
+		car->ofset = 0;
 		car->working = 1;
 	}
 	if (car->working == 0 && car->cycles == 0)
 	{
 		if (ft_check_valid(e, car, e->funcs[car->command].args))
-		{
 			g_func[car->command](e, car);
-	    	car->command = 0;
-		}
 		else
-			car->cur_pos++;
+		{
+			ft_adv_show(e, car, car->ofset + 2);
+			car->cur_pos = ft_check_pos(car->cur_pos + car->ofset + 2);
+			car->ofset = 0;
+		}
+		car->command = 0;
 	}
 	else
 	{

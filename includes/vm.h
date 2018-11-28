@@ -24,6 +24,7 @@ typedef struct 			s_carr
 {
 	unsigned int		cur_pos;
 	unsigned int		carry;
+	unsigned int		ofset;
 	int					index;
 	short				player;
 	int 				car_index;
@@ -67,6 +68,12 @@ typedef struct			s_intstruct
 	short				reg3;
 }						t_intstruct;
 
+typedef struct			s_codage
+{
+	unsigned char		nbr;
+	int					arg;
+}						t_codage;
+
 typedef struct 			s_env
 {
 	int 				cycle_to_die;
@@ -97,6 +104,7 @@ void					ft_init_carriage(t_env *e);
 /*
 **	carrun.c
 */
+void					ft_check_codage(t_env *e, t_carr *car, int *i, t_codage *cod);
 void					ft_carriage_run(t_env *e);
 /*
 **	validation/filevalid.c

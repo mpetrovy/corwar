@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/corewar",
-            "args": ["-n" "16777216" "ourchamp.cor"],
+            "args": ["-v" "31" "zork.cor"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

@@ -12,6 +12,21 @@
 
 #include "vm.h"
 
+void ft_check_codage(t_env *e, t_carr *car, int *i, t_codage *cod)
+{
+	while (*i < cod->arg)
+	{
+		if ((cod->nbr >> (6 - (*i) * 2) & 3) == REG_CODE)
+			car->ofset += 1;
+		else if ((cod->nbr >> (6 - (*i) * 2) & 3) == DIR_CODE)
+			car->ofset += e->funcs[car->command].label;
+		else if ((cod->nbr >> (6 - (*i) * 2) & 3) == IND_CODE)
+			car->ofset += 2;
+		(*i)++;
+	}
+}
+
+
 static void ft_end_prog(t_env *e, int cycles)
 {
 	if (cycles == e->dump)
