@@ -4,7 +4,7 @@ static void ft_flag_sub_show(t_env *e, t_carr *car, t_registers *reg)
 {
 	if ((e->flag_num & 4) == 4)
 	{
-		printf("P%5d | add ", car->car_index);
+		printf("P%5d | sub ", car->car_index);
 		printf("r%d r%d r%d\n", reg->reg1, reg->reg2, reg->reg3);
 	}
 }
@@ -27,5 +27,5 @@ void	ft_sub_hndl(t_env *e, t_carr *car)
 	ft_flag_sub_show(e, car, &reg);
 	ft_adv_show(e, car, pos + 1 - car->cur_pos);
 	car->cur_pos = pos + 1;
-	exit (0);
+	// exit (0);
 }

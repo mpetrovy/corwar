@@ -82,7 +82,7 @@ typedef struct					s_values
 	char						arg_t[3];
 	int							id;
 	int							cycles;
-	int							acb;
+	int							zero_code;
 	int							label;
 }								t_values;
 

@@ -59,9 +59,9 @@ void	ft_ldi_hndl(t_env *e, t_carr *car)
 {
 	t_get	f[4];
 
-	car->reg[1] = 5;
-	car->reg[2] = 6;
-	car->reg[3] = 9;
+	// car->reg[1] = 5;
+	// car->reg[2] = 6;
+	// car->reg[3] = 9;
 //	printf("LDI HANDLER\n");
 	if (car->args[0] == IND_CODE)
 		ft_ind_handle(e, car, f);

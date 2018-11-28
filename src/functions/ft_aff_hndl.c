@@ -10,5 +10,5 @@ void	ft_aff_hndl(t_env *e, t_carr *car)
 	reg = e->fild[pos];
 	ft_putchar((car->reg[reg] % 256));
 	car->cur_pos = pos + 1;
-	exit (0);
+	//exit (0);
 }

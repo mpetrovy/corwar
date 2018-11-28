@@ -17,7 +17,7 @@ static unsigned int ft_get_prog_size(unsigned char *buf, int i)
 	return ((buf[i] << 24) | (buf[i + 1] << 16) | (buf[i + 2] << 8) | (buf[i + 3]));
 }
 
-static void	ft_write_code(t_plr *p, unsigned char *buf, int i)
+static void			ft_write_code(t_plr *p, unsigned char *buf, int i)
 {
 	unsigned int j;
 
@@ -32,7 +32,7 @@ static void	ft_write_code(t_plr *p, unsigned char *buf, int i)
 		ft_error(p->file_name, "file is more then shown");
 }
 
-static void		ft_fill(t_plr *p, unsigned char *buf)
+static void			ft_fill(t_plr *p, unsigned char *buf)
 {
 	int i;
 	int j;
@@ -61,7 +61,7 @@ static void		ft_fill(t_plr *p, unsigned char *buf)
 	ft_write_code(p, buf, i);
 }
 
-static void	ft_read(t_plr *p)
+static void			ft_read(t_plr *p)
 {
 	int				fd;
 	int				res;
@@ -87,7 +87,7 @@ static void	ft_read(t_plr *p)
 	ft_fill(p, buf);
 }
 
-void	ft_read_cor(t_env *e, int ac)
+void				ft_read_cor(t_env *e, int ac)
 {
 	int i;
 
@@ -101,6 +101,6 @@ void	ft_read_cor(t_env *e, int ac)
 		e->plrs[i].head.prog_size, e->plrs[i].head.prog_name, e->plrs[i].head.comment);// change to ft_printf();
 		i++;
 	}
-
-	//printf("Its end\n");
+	if (e->plr_numb == 0)
+		ft_error("", "not enoug files");
 }

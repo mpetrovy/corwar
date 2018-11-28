@@ -7,32 +7,18 @@ static int	ft_check_valid(t_env *e, t_carr *car, int arg)
 	int i;
 	unsigned char nbr;
 
-	//printf("command this %d\n", car->command);
-	if (e->funcs[car->command].acb == 0)
-	{
-		//printf("we are here\n");
+	if (e->funcs[car->command].zero_code == 0)
 		return (1);// обработать смещение карретки в соотвествие с ее кол-вом аргументов
-	}
 	nbr = e->fild[car->cur_pos + 1];
-	//printf("nbr = %x\n", nbr);
 	i = 0;
 	while (i < arg)
 	{
 		if (((nbr >> (6 - i * 2) & 3) == REG_CODE) && (e->funcs[car->command].arg_t[i] & T_REG) == T_REG)
-		{
-		//	printf("REG\n");
 			car->args[i] = REG_CODE;
-		}
 		else if (((nbr >> (6 - i * 2) & 3) == DIR_CODE) && (e->funcs[car->command].arg_t[i] & T_DIR) == T_DIR)
-		{
-		//	printf("DIR\n");
 			car->args[i] = DIR_CODE;
-		}
 		else if (((nbr >> (6 - i * 2) & 3) == IND_CODE) && (e->funcs[car->command].arg_t[i] & T_IND) == T_IND)
-		{
-		//	printf("IND\n");
 			car->args[i] = IND_CODE;
-		}
 		else
 			return (0);// обработать смещение карретки в соотвествие с ее кол-вом аргументов
 		i++;
@@ -84,12 +70,8 @@ void	ft_update(t_env *e)
 	begin = e->head;
 	while (begin)
 	{
-		//if (begin->carr.)
 		if (begin->carr.cur_pos == MEM_SIZE)
 			begin->carr.cur_pos = 0;
-		//printf("nbr car %d LIVE %d\n", begin->carr.car_index, begin->carr.alive);
-	//	printf("nbr 1 = %d nbr 2 = %d\n", begin->carr.cur_pos, begin->carr.cur_pos + 1);
-	//	printf("command = %x next %x pos = %u player = %d\n", e->fild[begin->carr.cur_pos], e->fild[begin->carr.cur_pos + 1], begin->carr.cur_pos, begin->carr.player);
 		ft_handle_command(e, &begin->carr);
 		begin = begin->next;
 	}

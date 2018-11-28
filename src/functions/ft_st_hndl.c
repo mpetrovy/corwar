@@ -1,6 +1,6 @@
 #include "vm.h"
 
-static void ft_flag_st_show(t_env *e, t_carr *car, unsigned int reg, unsigned int val)
+static void ft_flag_st_show(t_env *e, t_carr *car, unsigned int reg, int val)
 {
 	if ((e->flag_num & 4) == 4)
 	{
@@ -12,20 +12,21 @@ static void ft_ind_first(t_env *e, t_carr *car)
 {
 	int		reg;
 	int		pos;
-	short	value;
+	int		value;
 	int		i;
-	int		pos_from;
 
 	///car->reg[1] = 0xffffffed;//check initialization of registers
-	pos_from = car->cur_pos;
+	//printf("ind rei\n");
 	pos = car->cur_pos + 2;
 	reg = e->fild[pos++];
-	value = ((short)ft_get_value(e, pos, 2) % IDX_MOD);
+	value = (short)ft_get_value(e, pos, 2);
+	// printf("value = %u\n", value);
+	value = (value % IDX_MOD);// + car->cur_pos;
 	i = -1;
 	while (++i < 4)
 	{
-		//printf("Position %u\n", ft_check_pos(pos_from + value + i));
-		e->fild[ft_check_pos(pos_from + value + i)] = ((car->reg[reg] >> (8 * (3 - i))) & 255);
+		//printf("Position %u\n", ft_check_pos(value + i));
+		e->fild[ft_check_pos(car->cur_pos + value + i)] = ((car->reg[reg] >> (8 * (3 - i))) & 255);
 	}
 	ft_flag_st_show(e, car, reg, value);
 	ft_adv_show(e, car, pos + 2 - car->cur_pos);
@@ -37,7 +38,7 @@ static void	ft_reg_first(t_env *e, t_carr *car)
 	int reg1;
 	int reg2;
 	int pos;
-	//printf("REG is first argument\n");// what is the output must be here
+	// printf("REG is first argument\n");// what is the output must be here
 
 	pos = car->cur_pos + 2;
 	reg1 = e->fild[pos++];

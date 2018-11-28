@@ -5,17 +5,20 @@ int 	ft_valid_file(char *file)
 	char	*str;
 
 	str = file;
-	while (*file)
+	if (ft_strcmp(str, "-v") && ft_strcmp(str, "-n") && ft_strcmp(str, "-dump"))
 	{
-		if (*file == '.')
+		while (*file)
 		{
-			if (!ft_strcmp(file, ".cor"))
-				return (1);
-			else
-				ft_error(str, "file has not valid format");
+			if (*file == '.')
+			{
+				if (!ft_strcmp(file, ".cor"))
+					return (1);
+				else
+					ft_error(str, "file has not valid format");
+			}
+			file++;
 		}
-		file++;
+		return (0);
 	}
-	ft_error(str, "file not valid");
 	return (0);
 }

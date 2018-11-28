@@ -1,6 +1,6 @@
 #include "vm.h"
 
-int ft_check_pos(int pos)
+int 	ft_check_pos(int pos)
 {
 	return (((unsigned)(MEM_SIZE + pos)) % MEM_SIZE);
 }
@@ -12,7 +12,6 @@ void	ft_show_for_debug(t_env *e)
 	unsigned int ref;
 
 	ref = 0;
-	
 	printf("0x%.4x : ", ref);
 	while (k < MEM_SIZE)
 	{
@@ -49,7 +48,6 @@ void	ft_set_handlers(t_hndl *func)
 	func[16] = &ft_aff_hndl;
 }
 
-
 void	ft_check_killed_carriage(t_env *e)
 {
 	t_carlist *begin;
@@ -69,7 +67,8 @@ void	ft_check_killed_carriage(t_env *e)
 		{
 			(tmp) ? (tmp->next = begin->next) : (e->head = e->head->next);
 			if ((e->flag_num & 8) == 8)
-				printf("Process %d hasn't lived for (here) cycles (CTD %d)\n", begin->carr.car_index, e->cycle_to_die);
+				printf("Process %d hasn't lived for (%d) cycles (CTD %d)\n",
+				begin->carr.car_index, begin->carr.cycles, e->cycle_to_die);//cycles
 			free(begin);
 			begin = tmp ? tmp->next : e->head;
 		}
@@ -91,7 +90,4 @@ void	ft_check_cycle(t_env *e, short *live)
 	e->lives = 0;
 	if ((e->flag_num & 2) == 2)
 		printf("Cycle to die is now %d\n", e->cycle_to_die);
-	//printf("before del carr\n");
-	//ft_check_killed_carriage(e);
-	//printf("deleted our carr\n");
 }

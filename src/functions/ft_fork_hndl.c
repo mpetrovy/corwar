@@ -12,16 +12,16 @@ static void	ft_copy(unsigned int *dst, unsigned int *cp)
 	}
 }
 
-static void	ft_flag_fork_show(t_env *e, t_carr *car, unsigned int value)
+static void	ft_flag_fork_show(t_env *e, t_carr *car, int value)
 {
 	if ((e->flag_num & 4) == 4)
 	{
-		printf("P%5d | fork %u (%d)\n", car->car_index, value,
+		printf("P%5d | fork %d (%d)\n", car->car_index, value,
 		car->cur_pos + (value % IDX_MOD));
 	}
 }
 
-static void	ft_add_cursor(t_env *e, t_carr *car, unsigned int pos)
+static void	ft_add_cursor(t_env *e, t_carr *car, int pos)
 {
 	t_carlist *lst;
 	t_carlist *tmp;
@@ -29,7 +29,7 @@ static void	ft_add_cursor(t_env *e, t_carr *car, unsigned int pos)
 	tmp = e->head;
 	if (!(lst = (t_carlist*)malloc(sizeof(t_carlist))))
 		return ;
-	lst->carr.cur_pos = car->cur_pos + (pos % IDX_MOD);
+	lst->carr.cur_pos = ft_check_pos(car->cur_pos + (pos % IDX_MOD));
 	lst->carr.player = car->player;
 	lst->carr.car_index = e->carriage_index;
 	lst->carr.carry = car->carry;
@@ -47,21 +47,15 @@ static void	ft_add_cursor(t_env *e, t_carr *car, unsigned int pos)
 
 void	ft_fork_hndl(t_env *e, t_carr *car)
 {
-	unsigned int	value;
-	unsigned int	step;
+	short	value;
+	int		step;
 
 	step = 3;
 	// printf("flag %d\n", e->flag_num);
 	// printf("fork working\n"); //delete
-	value = ft_get_value(e, car->cur_pos + 1, 2);
+	value = (short)ft_get_value(e, car->cur_pos + 1, 2);
 	//printf("P %d | fork %u ()\n", car->car_index, value);
 	ft_add_cursor(e, car, value);
-	//e->cursors += 1;
-	// printf("value %x\n", value);
-	// printf("num car %d\n", e->head->carr.car_index);
-	// printf("num car next %d\n", e->head->next->carr.car_index);
-	// printf("value = %x, %x\n", e->head->carr.cur_pos, e->fild[e->head->carr.cur_pos]);
-	//printf("cursor = %d\n", e->cursors);
 	ft_flag_fork_show(e, car, value);
 	ft_adv_show(e, car, step);
 	car->cur_pos += step;

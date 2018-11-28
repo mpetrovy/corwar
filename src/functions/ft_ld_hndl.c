@@ -26,22 +26,23 @@ unsigned int	ft_get_value(t_env *e, int cur_pos, int label)
 	return (0);
 }
 
-static void ft_flag_ld_show(t_env *e, t_carr *car, unsigned int val, unsigned int reg)
+static void ft_flag_ld_show(t_env *e, t_carr *car, int val, int reg)
 {
 	if ((e->flag_num & 4) == 4)
 	{
 		printf("P%5d | ld ", car->car_index);
-		printf("%u r%u\n", val, reg);
+		printf("%d r%d\n", val, reg);
 	}
 }
 
 static void	ft_dir_first(t_env *e, t_carr *car)
 {
-	unsigned int	value;
+	int				value;
 	unsigned int	pos;
 	unsigned int	reg;
 	short			live;
 
+	//printf("dir here\n");
 	live = car->alive;
 	pos = car->cur_pos + 2;
 	value = ft_get_value(e, pos, e->funcs[car->command].label);
@@ -61,15 +62,18 @@ static void	ft_dir_first(t_env *e, t_carr *car)
 
 static void	ft_ind_first(t_env *e, t_carr *car)
 {
-	unsigned int	ind;
-	int				pos;
-	unsigned int	value;
+	short	ind;
+	int		pos;
+	short	value;
 
+	// printf("here\n");
 	pos = car->cur_pos + 2;
 	ind = ft_get_value(e, pos, 2) % IDX_MOD;
+	// printf("ind %d\n", ind);
 	e->fild[pos++] = ((ind >> 8) & 255);
 	e->fild[pos++] = (ind & 255);
 	value = ft_get_value(e, car->cur_pos + ind, 4);
+	// printf("value %d -> %u\n", value, value);
 	car->carry = ((value == 0) ? (1) : (0));
 	car->reg[e->fild[pos]] = value;
 	ft_flag_ld_show(e, car, value, e->fild[pos]);

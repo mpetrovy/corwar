@@ -22,29 +22,15 @@ static void	ft_ind_first(t_env *e, t_carr *car)
 {
 	unsigned int	ind;
 	int				pos;
-	unsigned int	value;
+	int				value;
 
 	pos = car->cur_pos + 2;
- // printf("start %x\n", e->fild[pos]);
- // printf("next %x\n", e->fild[pos + 1]);
- // printf("value %x\n", ft_get_value(e, pos, 2));
 	ind = ft_get_value(e, pos, 2);
-	// printf("ind %x\n", ind);
-	// printf("fild before %x\n", e->fild[pos]);
-	// e->fild[pos++] = ((ind >> 8) & 255);
-	// printf("fild after %x\n", e->fild[pos - 1]);
-	// printf("fild before %x\n", e->fild[pos]);
-	//e->fild[pos++] = (ind & 255);
 	pos += 2;
-//	printf("fild after %x\n", e->fild[pos - 1]);
 	value = ft_get_value(e, car->cur_pos + ind, 4);
-	//printf("value %x\n", value);
 	car->carry = ((value == 0) ? (1) : (0));
 	car->reg[e->fild[pos]] = value;
-	//printf("reg %x\n", car->reg[e->fild[pos]]);
 	car->cur_pos = pos + 1;
-//	printf("position %x\n", e->fild[car->cur_pos]);
-//	exit(0);
 }
 
 void	ft_lld_hndl(t_env *e, t_carr *car)
