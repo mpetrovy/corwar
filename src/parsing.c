@@ -11,12 +11,12 @@ static void	ft_check_flag_value(char *str)
 	}
 }
 
-static int	ft_check_flags(t_env *e, int ac, char **av, int p, int *i)
+static int	ft_check_flags(t_env *e, t_targparse *arg, char **av, int *i)
 {
-	unsigned int num;
+	unsigned int	num;
 
 	num = 0;
-	while (*i < ac)
+	while (*i < arg->ac)
 	{
 		if (!ft_strcmp(av[*i], "-n"))
 		{
@@ -25,7 +25,7 @@ static int	ft_check_flags(t_env *e, int ac, char **av, int p, int *i)
 			num = ft_atoi(av[*i]);
 			if (num < 4294967295 || num == 4294967295)
 			{
-				e->plrs[p].n_numb = num;
+				e->plrs[arg->p].n_numb = num;
 				(*i)++;
 				return (1);
 			}
@@ -64,24 +64,25 @@ static void	ft_check_vflag(t_env *e, char **av, int ac)
 
 void		ft_parse_input(t_env *e, int ac, char **av)
 {
-	int	i;
-	int	p;
-	int	res;
+	int			i;
+	t_targparse arg;
+	int			res;
 
 	e->plr_numb = 0;
-	p = 0;
+	arg.p = 0;
+	arg.ac = ac;
 	i = 1;
 	ft_check_vflag(e, av, ac);
 	while (i < ac)
 	{
-		e->plrs[p].n_numb = 0;
+		e->plrs[arg.p].n_numb = 0;
 		if (!ft_strcmp(av[i], "-n"))
-			res = ft_check_flags(e, ac, av, p, &i);
+			res = ft_check_flags(e, &arg, av, &i);
 		if (i != ac && ft_valid_file(av[i]))
 		{
 			if (!res)
-				e->plrs[p].n_numb = 4294967295 - p;
-			e->plrs[p++].file_name = av[i];
+				e->plrs[arg.p].n_numb = 4294967295 - arg.p;
+			e->plrs[arg.p++].file_name = av[i];
 			e->plr_numb++;
 		}
 		if (e->plr_numb > MAX_PLAYERS)

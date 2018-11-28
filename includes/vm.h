@@ -74,6 +74,12 @@ typedef struct			s_codage
 	int					arg;
 }						t_codage;
 
+typedef	struct			s_targparse
+{
+	int					ac;
+	int					p;
+}						t_targparse;
+
 typedef struct 			s_env
 {
 	int 				cycle_to_die;
