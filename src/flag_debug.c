@@ -48,6 +48,12 @@ void	ft_set_handlers(t_hndl *func)
 	func[16] = &ft_aff_hndl;
 }
 
+static void ft_check_print(t_env *e, t_carlist *begin)
+{
+	printf("Process %d hasn't lived for (%d) cycles (CTD %d)\n",
+				begin->carr.car_index, begin->carr.cycles, e->cycle_to_die);//cycles
+}	
+
 void	ft_check_killed_carriage(t_env *e)
 {
 	t_carlist *begin;
@@ -65,10 +71,12 @@ void	ft_check_killed_carriage(t_env *e)
 		}
 		else
 		{
-			(tmp) ? (tmp->next = begin->next) : (e->head = e->head->next);
+			if (tmp)
+				tmp->next = begin->next;
+			else
+				e->head = e->head->next;
 			if ((e->flag_num & 8) == 8)
-				printf("Process %d hasn't lived for (%d) cycles (CTD %d)\n",
-				begin->carr.car_index, begin->carr.cycles, e->cycle_to_die);//cycles
+				ft_check_print(e, begin);
 			free(begin);
 			begin = tmp ? tmp->next : e->head;
 		}
