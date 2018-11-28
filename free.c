@@ -17,6 +17,7 @@ void	ft_free(t_form *assm)
 	ft_strdel(&assm->name);
 	ft_strdel(&assm->comment);
 	free_comlist(*assm->com);
+	free(assm->com);
 }
 
 void	free_comlist(t_op *head)
@@ -41,6 +42,7 @@ void	free_comlist(t_op *head)
 		}
 		if (i->label && *i->label)
 			ft_free_labelist(*i->label);
+		free(i->label);
 		free(i);
 	}
 }

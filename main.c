@@ -28,6 +28,7 @@ int		main(int argc, char **argv)
 	close(assm.fd);
 	ft_write(&assm, argv[1], 0);
 	ft_free(&assm);
+	return (0);
 }
 
 void	ft_zero(t_form *assm)

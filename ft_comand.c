@@ -55,10 +55,9 @@ char	*ft_get_command(t_form *assm, char *line, int i, char *labtmp)
 		}
 		if (ft_find_label(assm, line) >= 1)
 		{
-			if (labtmp != NULL)
-				ft_strdel(&labtmp);
 			labtmp = ft_label_valid(assm, &i, line);
 			ft_add_label(assm, labtmp);
+			ft_strdel(&labtmp);
 		}
 		else if (ft_find_command(assm, line) == 17 && ft_space_line(line) == 0)
 			ft_error("line");

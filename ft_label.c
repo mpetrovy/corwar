@@ -40,6 +40,7 @@ void	ft_is_l(t_form *assm, char *line, int *i, char *labtmp)
 	{
 		labtmp = ft_label_valid(assm, i, line);
 		ft_add_label(assm, labtmp);
+		ft_strdel(&labtmp);
 	}
 }
 

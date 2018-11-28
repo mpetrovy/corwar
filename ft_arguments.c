@@ -30,6 +30,7 @@ void	ft_arguments(t_op *ptr, char *line, int com_num)
 			ft_strdel(&args[i]);
 			i++;
 		}
+		free(args);
 	}
 }
 
