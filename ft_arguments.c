@@ -21,7 +21,7 @@ void	ft_arguments(t_op *ptr, char *line, int com_num)
 	args = ft_get_arguments(ptr, line);
 	ft_arg_validate(args, ptr, 0, com_num);
 	ft_bytes(ptr);
-	ft_set_code(ptr);
+	ft_set_code(ptr, 1);
 	i = 0;
 	if (args)
 	{

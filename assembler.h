@@ -92,7 +92,7 @@ void			ft_label_arg(char *args, int i, t_op *ptr, int k);
 int				ft_tabs(t_form *assm, char *str, int i, int *k);
 void			ft_com_init(t_op *ptr, t_form *assm);
 void			ft_bytes(t_op *ptr);
-void			ft_set_code(t_op *ptr);
+void			ft_set_code(t_op *ptr, int i);
 int				ft_atoi_base(const char *str, int str_base);
 int				base(int c, int base);
 int				ft_isspace(char const c);

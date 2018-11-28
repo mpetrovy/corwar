@@ -12,14 +12,12 @@
 
 #include "assembler.h"
 
-void	ft_set_code(t_op *ptr)
+void	ft_set_code(t_op *ptr, int i)
 {
-	int		i;
 	char	*code;
 	char	*z;
 
 	code = NULL;
-	i = 1;
 	if (ptr->codage == 1)
 	{
 		code = ft_strdup(ptr->arg[0].bin);
@@ -30,10 +28,12 @@ void	ft_set_code(t_op *ptr)
 			ft_strdel(&z);
 			i++;
 		}
+		z = code;
 		if (ft_strlen(code) == 6)
 			code = ft_strjoin(code, "00");
 		else if (ft_strlen(code) == 4)
 			code = ft_strjoin(code, "0000");
+		free(z);
 		ptr->cod = ft_atoi_base(code, 2);
 		ft_strdel(&code);
 	}
