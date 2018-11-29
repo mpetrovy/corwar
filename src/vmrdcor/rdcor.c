@@ -12,17 +12,19 @@
 
 #include "vm.h"
 
-static unsigned int ft_get_prog_size(unsigned char *buf, int i)
+static unsigned int	ft_get_prog_size(unsigned char *buf, int i)
 {
-	return ((buf[i] << 24) | (buf[i + 1] << 16) | (buf[i + 2] << 8) | (buf[i + 3]));
+	return ((buf[i] << 24) | (buf[i + 1] << 16) | (buf[i + 2] << 8) |
+	(buf[i + 3]));
 }
 
 static void			ft_write_code(t_plr *p, unsigned char *buf, int i)
 {
-	unsigned int j;
+	unsigned int	j;
 
 	j = 0;
-	if (!(p->code = (unsigned char*)malloc(sizeof(unsigned char) * (p->head.prog_size))))
+	if (!(p->code = (unsigned char*)malloc(sizeof(unsigned char) *
+	(p->head.prog_size))))
 		return ;
 	while (j < p->head.prog_size)
 	{
@@ -34,8 +36,8 @@ static void			ft_write_code(t_plr *p, unsigned char *buf, int i)
 
 static void			ft_fill(t_plr *p, unsigned char *buf)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 4;
 	if (buf[0] == 0 && buf[1] == 234 && buf[2] == 131 && buf[3] == 243)
@@ -49,13 +51,13 @@ static void			ft_fill(t_plr *p, unsigned char *buf)
 		ft_error(p->file_name, "Champion name too long (Max length 128)");
 	i += 4;
 	if ((p->head.prog_size = ft_get_prog_size(buf, i)) > CHAMP_MAX_SIZE)
-		ft_error(p->file_name, "Error: File champs/42.cor copy has too large\
-		 a code (993 bytes > 682 bytes)");
+		ft_error(p->file_name, "Error: File champs/42.cor copy has too large \
+		a code (993 bytes > 682 bytes)");
 	i += 4;
 	j = 0;
 	while (i < 2188)
 		p->head.comment[j++] = buf[i++];
-	if (buf[i] != 0 || buf[i + 1] != 0 || buf[i+2] != 0 || buf[i+3] != 0)
+	if (buf[i] != 0 || buf[i + 1] != 0 || buf[i + 2] != 0 || buf[i + 3] != 0)
 		ft_error(p->file_name, "second null not exist");
 	i += 4;
 	ft_write_code(p, buf, i);
@@ -89,16 +91,17 @@ static void			ft_read(t_plr *p)
 
 void				ft_read_cor(t_env *e, int ac)
 {
-	int i;
+	int	i;
 
 	(void)ac;
 	i = 0;
-	printf("Introducing contestants...\n");
+	ft_printf("Introducing contestants...\n");
 	while (i < e->plr_numb)
 	{
 		ft_read(&e->plrs[i]);
-		printf("* Player %d, weighing %u bytes, \"%s\" (\"%s\") !\n", i + 1,
-		e->plrs[i].head.prog_size, e->plrs[i].head.prog_name, e->plrs[i].head.comment);// change to ft_printf();
+		ft_printf("* Player %d, weighing %u bytes, \"%s\" (\"%s\") !\n", i + 1,
+		e->plrs[i].head.prog_size, e->plrs[i].head.prog_name,
+		e->plrs[i].head.comment);
 		i++;
 	}
 	if (e->plr_numb == 0)

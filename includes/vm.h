@@ -15,19 +15,27 @@
 
 # include "op.h"
 # include "libft.h"
+# include "ft_printf/includes/ft_printf.h"
 # include <stdlib.h>
 # include <fcntl.h>
-# include <stdio.h>//delete after all
 # define READ_SIZE 4097
 
-typedef struct 			s_carr
+typedef struct			s_codage
+{
+	unsigned char		nbr;
+	int					arg;
+}						t_codage;
+
+typedef struct			s_carr
 {
 	unsigned int		cur_pos;
 	unsigned int		carry;
 	unsigned int		ofset;
+	t_codage			cod;
+	int					i;
 	int					index;
 	short				player;
-	int 				car_index;
+	int					car_index;
 	unsigned int		plr_num;
 	int					args[3];
 	unsigned int		reg[REG_NUMBER];
@@ -37,18 +45,18 @@ typedef struct 			s_carr
 	short				working;
 }						t_carr;
 
-typedef struct 			s_plr
+typedef struct			s_plr
 {
 	char				*file_name;
-	int 				file_size;
+	int					file_size;
 	int					lifes;
 	t_header			head;
 	unsigned char		*code;
-	unsigned int 		plr_pos;
+	unsigned int		plr_pos;
 	unsigned int		n_numb;
 }						t_plr;
 
-typedef struct 			s_carlist
+typedef struct			s_carlist
 {
 	t_carr				carr;
 	struct s_carlist	*next;
@@ -68,24 +76,18 @@ typedef struct			s_intstruct
 	short				reg3;
 }						t_intstruct;
 
-typedef struct			s_codage
-{
-	unsigned char		nbr;
-	int					arg;
-}						t_codage;
-
 typedef	struct			s_targparse
 {
 	int					ac;
 	int					p;
 }						t_targparse;
 
-typedef struct 			s_env
+typedef struct			s_env
 {
-	int 				cycle_to_die;
+	int					cycle_to_die;
 	int					cur_cycle;
 	int					dump;
-	int					flag_num; 
+	int					flag_num;
 	int					winner;
 	int					checks;
 	int					lives;
@@ -110,12 +112,13 @@ void					ft_init_carriage(t_env *e);
 /*
 **	carrun.c
 */
-void					ft_check_codage(t_env *e, t_carr *car, int *i, t_codage *cod);
+void					ft_check_codage(t_env *e, t_carr *car, int *i,
+	t_codage *cod);
 void					ft_carriage_run(t_env *e);
 /*
 **	validation/filevalid.c
 */
-int 					ft_valid_file(char *file);
+int						ft_valid_file(char *file);
 /*
 **	error_handler/file_err_hndl.c
 */
@@ -126,7 +129,7 @@ void					ft_error(char *file, char *err_mess);
 void					ft_check_cycle(t_env *e, short *live);
 void					ft_check_killed_carriage(t_env *e);
 void					ft_set_handlers(t_hndl *func);
-int 					ft_check_pos(int pos);
+int						ft_check_pos(int pos);
 void					ft_show_for_debug(t_env *e);
 /*
 **	parsing.c
@@ -139,14 +142,15 @@ void					ft_fill_env(t_env *e, int i, int p);
 /*
 ** move_carriage.c
 */
-void 					ft_carstep(t_env *e, int *cycles);
+void					ft_check_argum(t_env *e, t_carr *car,
+	int *i, t_codage *cod);
+void					ft_carstep(t_env *e, int *cycles);
 /*
 ** function_handlers
 */
 void					ft_check_killed_carriage(t_env *e);
 void					ft_update(t_env *e);
-typedef unsigned int 	(*t_get)(t_env*, t_carr*, int*);
-
+typedef unsigned int	(*t_get)(t_env*, t_carr*, int*);
 void					ft_adv_show(t_env *e, t_carr *car, unsigned int step);
 unsigned int			ft_get_value(t_env *e, int cur_pos, int label);
 void					ft_set_f(t_get *f);

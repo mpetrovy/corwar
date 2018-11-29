@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_fork_hndl.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: daalexan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/11/28 21:20:00 by daalexan          #+#    #+#             */
+/*   Updated: 2018/11/28 21:20:01 by daalexan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "vm.h"
 
 static void	ft_copy(unsigned int *dst, unsigned int *cp)
@@ -16,8 +28,8 @@ static void	ft_flag_fork_show(t_env *e, t_carr *car, int value)
 {
 	if ((e->flag_num & 4) == 4)
 	{
-		printf("P%5d | fork %d (%d)\n", car->car_index, value,
-		car->cur_pos + (value % IDX_MOD));
+		ft_printf("P%5d | fork %d (%d)\n", car->car_index, value,
+		ft_check_pos(car->cur_pos + (value % IDX_MOD)));
 	}
 }
 
@@ -30,13 +42,11 @@ static void	ft_add_cursor(t_env *e, t_carr *car, int pos)
 	if (!(lst = (t_carlist*)malloc(sizeof(t_carlist))))
 		return ;
 	lst->carr.cur_pos = ft_check_pos(car->cur_pos + (pos % IDX_MOD));
+	// printf("fork new carpos %d\n", lst->carr.cur_pos);
 	lst->carr.player = car->player;
 	lst->carr.car_index = e->carriage_index;
 	lst->carr.carry = car->carry;
 	ft_copy(lst->carr.reg, car->reg);
-	//lst->carr.reg[0] = car->reg[0];
-	//printf("live %d\n", car->alive);
-	// lst->carr.killed = car->killed;
 	lst->carr.alive = car->alive;
 	lst->carr.command = 0;
 	lst->carr.cycles = 0;
@@ -45,20 +55,17 @@ static void	ft_add_cursor(t_env *e, t_carr *car, int pos)
 	e->carriage_index++;
 }
 
-void	ft_fork_hndl(t_env *e, t_carr *car)
+void		ft_fork_hndl(t_env *e, t_carr *car)
 {
 	short	value;
 	int		step;
 
+	// printf("FORK NOW\n");
 	step = 3;
-	// printf("flag %d\n", e->flag_num);
-	// printf("fork working\n"); //delete
 	value = (short)ft_get_value(e, car->cur_pos + 1, 2);
-	//printf("P %d | fork %u ()\n", car->car_index, value);
 	ft_add_cursor(e, car, value);
 	ft_flag_fork_show(e, car, value);
 	ft_adv_show(e, car, step);
-	car->cur_pos += step;
-	// printf("%x %x %x %x\n", e->fild[car->cur_pos], e->fild[car->cur_pos + 1], e->fild[car->cur_pos + 2], e->fild[car->cur_pos + 3]);
-	//exit (0);
+	car->cur_pos = ft_check_pos(car->cur_pos + step);
+	// printf("fork carpos %d\n", car->cur_pos);
 }

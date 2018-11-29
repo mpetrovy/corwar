@@ -1,32 +1,50 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_or_hndl.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: daalexan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/11/28 21:21:21 by daalexan          #+#    #+#             */
+/*   Updated: 2018/11/28 21:21:22 by daalexan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "vm.h"
 
-static void	ft_flag_or_show(t_env *e, t_carr *car, int reg, int val1, int val2)
+static void	ft_flag_or_show(t_env *e, t_carr *car, t_registers *reg)
 {
 	if ((e->flag_num & 4) == 4)
-		printf("P%5d | or %d %d r%d\n", car->car_index, val1, val2, reg);
+	{
+		ft_printf("P%5d | or %d %d r%d\n", car->car_index,
+		reg->reg1, reg->reg2, reg->reg3);
+	}
 }
 
-void	ft_or_hndl(t_env *e, t_carr *car)
+void		ft_or_hndl(t_env *e, t_carr *car)
 {
-	int pos;
-	int reg;
-	int value;
-	int var;
-	t_get	f[4];
+	int			value;
+	int			pos;
+	t_registers reg;
+	t_get		f[4];
 
 	ft_set_f(f);
-	pos = car->cur_pos + 2;
-	var = f[car->args[0]](e, car, &pos);
-	value = var | f[car->args[1]](e, car, &pos);
-	reg = e->fild[pos];
-	ft_flag_or_show(e, car, reg, var, value);
-	//printf("reg = %d\n", reg);
-	//printf("value = %u\n", value);
-	car->carry = ((value == 0) ? (1) : (0));
-	car->reg[reg] = value;
-	ft_adv_show(e, car, pos + 1 - car->cur_pos);
-	car->cur_pos = pos + 1;
-	//printf("reg = %u\n", car->reg[reg]);
-	//printf("position %x\n", e->fild[car->cur_pos]);
-	//exit (0);
+	pos = ft_check_pos(car->cur_pos + 2);
+	reg.reg1 = f[car->args[0]](e, car, &pos);
+	reg.reg2 = f[car->args[1]](e, car, &pos);
+	value = reg.reg1 | reg.reg2;
+	reg.reg3 = e->fild[pos];
+	if (reg.reg3 > 0 && reg.reg3 <= REG_NUMBER)
+	{
+		ft_flag_or_show(e, car, &reg);
+		car->carry = ((value == 0) ? (1) : (0));
+		car->reg[reg.reg3] = value;
+		ft_adv_show(e, car, pos + 1 - car->cur_pos);
+		car->cur_pos = ft_check_pos(pos + 1);
+	}
+	else
+	{
+		ft_check_codage(e, car, &car->i, &car->cod);
+		car->cur_pos = ft_check_pos(car->cur_pos + 2 + car->ofset);
+	}
 }

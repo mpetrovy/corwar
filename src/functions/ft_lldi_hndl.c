@@ -1,28 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lldi_hndl.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: daalexan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/11/28 21:21:16 by daalexan          #+#    #+#             */
+/*   Updated: 2018/11/28 21:21:17 by daalexan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "vm.h"
 
 static void	ft_ind_handle(t_env *e, t_carr *car, t_get *f)
 {
-	int pos;
-	unsigned int value;
-	unsigned int val1;
+	int				pos;
+	unsigned int	value;
+	unsigned int	val1;
 
-//	printf("work ind firsc\n");
 	ft_set_f(f);
-	pos = car->cur_pos + 2;
+	pos = ft_check_pos(car->cur_pos + 2);
 	val1 = ft_get_value(e, pos, 2);
 	pos += 2;
-	// printf("val1 = %x\n", val1);
 	val1 = ft_get_value(e, (val1 % IDX_MOD) + car->cur_pos, 4);
-	// printf("val1 next = %x\n", val1);
 	value = car->cur_pos + (val1 + f[car->args[1]](e, car, &pos));
-	// printf("value %x\n", value);
 	value = ft_get_value(e, value, 4);
-	// printf("this value %x reg = %x\n", value, e->fild[pos]);
 	car->reg[e->fild[pos]] = value;
-	// printf("reg = %x\n", car->reg[e->fild[pos]]);
-	car->cur_pos = pos + 1;
-		// printf("carrpos %x\n", e->fild[car->cur_pos]);
-	// exit (0);
+	car->cur_pos = ft_check_pos(pos + 1);
 }
 
 static void	ft_handle(t_env *e, t_carr *car, t_get *f)
@@ -31,14 +35,15 @@ static void	ft_handle(t_env *e, t_carr *car, t_get *f)
 	int value;
 
 	ft_set_f(f);
-	pos = car->cur_pos + 2;
-	value = car->cur_pos + ((f[car->args[0]](e, car, &pos) + f[car->args[1]](e, car, &pos)) % IDX_MOD);
+	pos = ft_check_pos(car->cur_pos + 2);
+	value = car->cur_pos + ((f[car->args[0]](e, car, &pos) +
+	f[car->args[1]](e, car, &pos)) % IDX_MOD);
 	value = ft_get_value(e, value, 4);
 	car->reg[e->fild[pos]] = value;
-	car->cur_pos = pos + 1;
+	car->cur_pos = ft_check_pos(pos + 1);
 }
 
-void	ft_lldi_hndl(t_env *e, t_carr *car)
+void		ft_lldi_hndl(t_env *e, t_carr *car)
 {
 	t_get	f[4];
 

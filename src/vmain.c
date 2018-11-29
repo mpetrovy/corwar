@@ -14,11 +14,10 @@
 
 void	ft_memclr(t_env *e)
 {
-	int j;
+	int			j;
 	t_carlist	*begin;
 	t_carlist	*tmp;
 
-	//printf("Mem clear\n");//delete
 	begin = e->head;
 	while (begin)
 	{
@@ -34,12 +33,12 @@ void	ft_memclr(t_env *e)
 	}
 }
 
-int main(int ac, char **av)
+int		main(int ac, char **av)
 {
 	t_env	e;
 
 	if (ac < 2)
-		printf("Usage: [flags] [files] ...\n");//usage ...
+		ft_printf("Usage: [flags] [files] ...\n");
 	else
 	{
 		e.dump = -1;
@@ -50,6 +49,5 @@ int main(int ac, char **av)
 		ft_carriage_run(&e);
 	}
 	ft_memclr(&e);
-	// system("leaks corewar");
-	return (0);	
+	return (0);
 }

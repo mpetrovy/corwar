@@ -1,5 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   initialization.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: daalexan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/11/28 22:00:58 by daalexan          #+#    #+#             */
+/*   Updated: 2018/11/28 22:01:01 by daalexan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "vm.h"
 
+int		ft_check_pos(int pos)
+{
+	return (((unsigned)(MEM_SIZE + pos)) % MEM_SIZE);
+}
 
 static t_values		g_values[17] =
 {
@@ -22,7 +38,6 @@ static t_values		g_values[17] =
 	{1, {T_REG}, 16, 2, 1, 4}
 };
 
-
 void	ft_set_data(t_env *e)
 {
 	int	i;
@@ -38,7 +53,6 @@ void	ft_set_data(t_env *e)
 	e->lives = 0;
 	e->winner = e->plr_numb;
 	e->checks = 0;
-	//e->cursors = 0; //maybe delete
 	e->carriage_index = 1;
 	e->plrs[0].lifes = 0;
 	e->plrs[1].lifes = 0;
@@ -48,9 +62,9 @@ void	ft_set_data(t_env *e)
 
 void	ft_fill_env(t_env *e, int i, int p)
 {
-	unsigned int j;
-	int move;
-	int offset;
+	unsigned int	j;
+	int				move;
+	int				offset;
 
 	ft_bzero(e->fild, MEM_SIZE);
 	ft_set_data(e);

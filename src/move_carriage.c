@@ -1,35 +1,40 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   move_carriage.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: daalexan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/11/28 21:54:18 by daalexan          #+#    #+#             */
+/*   Updated: 2018/11/28 21:55:17 by daalexan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "vm.h"
 
 static t_hndl g_func[17];
 
 static int	ft_check_valid(t_env *e, t_carr *car, int arg)
 {
-	int i;
-	t_codage cod;
+	int			i;
 
 	if (e->funcs[car->command].zero_code == 0)
 		return (1);
-	cod.nbr = e->fild[car->cur_pos + 1];
-	cod.arg = arg;
+	car->cod.nbr = e->fild[ft_check_pos(car->cur_pos + 1)];
+	car->cod.arg = arg;
 	i = 0;
 	while (i < arg)
 	{
-		if (((cod.nbr >> (6 - i * 2) & 3) == REG_CODE) && (e->funcs[car->command].arg_t[i] & T_REG) == T_REG)
-			car->args[i] = REG_CODE;
-		else if (((cod.nbr >> (6 - i * 2) & 3) == DIR_CODE) && (e->funcs[car->command].arg_t[i] & T_DIR) == T_DIR)
-			car->args[i] = DIR_CODE;
-		else if (((cod.nbr >> (6 - i * 2) & 3) == IND_CODE) && (e->funcs[car->command].arg_t[i] & T_IND) == T_IND)
-			car->args[i] = IND_CODE;
-		else
-			ft_check_codage(e, car, &i, &cod);
+		ft_check_argum(e, car, &i, &car->cod);
 		i++;
 	}
+
 	return ((car->ofset) ? (0) : (1));
 }
 
-static void    ft_move_carr(t_env *e, t_carr *car)
+static void	ft_move_carr(t_env *e, t_carr *car)
 {
-    if (car->command == 0)
+	if (car->command == 0)
 	{
 		car->command = e->fild[car->cur_pos];
 		car->cycles = e->funcs[car->command].cycles - 1;
@@ -56,7 +61,6 @@ static void    ft_move_carr(t_env *e, t_carr *car)
 	}
 }
 
-
 static void	ft_handle_command(t_env *e, t_carr *car)
 {
 	if (e->fild[car->cur_pos] >= 1 && e->fild[car->cur_pos] <= 16)
@@ -64,24 +68,24 @@ static void	ft_handle_command(t_env *e, t_carr *car)
 		ft_move_carr(e, car);
 	}
 	else
-		car->cur_pos++;
+		car->cur_pos = ft_check_pos(car->cur_pos + 1);
 }
 
-void	ft_update(t_env *e)
+void		ft_update(t_env *e)
 {
 	t_carlist *begin;
 
 	begin = e->head;
 	while (begin)
 	{
-		if (begin->carr.cur_pos == MEM_SIZE)
-			begin->carr.cur_pos = 0;
+		// if (begin->carr.cur_pos >= MEM_SIZE)
+		// 	begin->carr.cur_pos = ft_check_pos(begin->carr.cur_pos);
 		ft_handle_command(e, &begin->carr);
 		begin = begin->next;
 	}
 }
 
-void ft_carstep(t_env *e, int *cycles)
+void		ft_carstep(t_env *e, int *cycles)
 {
 	short	live;
 	int		cur_cycle;
@@ -94,7 +98,7 @@ void ft_carstep(t_env *e, int *cycles)
 		if (*cycles == e->dump)
 			break ;
 		if ((e->flag_num & 2) == 2)
-			printf("It is now cycle %d\n", *cycles);
+			ft_printf("It is now cycle %d\n", *cycles);
 		ft_update(e);
 		if (cur_cycle == e->cycle_to_die)
 		{

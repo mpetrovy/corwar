@@ -1,34 +1,43 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   flag_debug.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: daalexan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/11/28 22:03:04 by daalexan          #+#    #+#             */
+/*   Updated: 2018/11/28 22:03:05 by daalexan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "vm.h"
 
-int 	ft_check_pos(int pos)
+void		ft_show_for_debug(t_env *e)
 {
-	return (((unsigned)(MEM_SIZE + pos)) % MEM_SIZE);
-}
+	int				k;
+	int				ch;
+	unsigned int	ref;
 
-void	ft_show_for_debug(t_env *e)
-{
-	int k = 0;
-	int ch = 0;
-	unsigned int ref;
-
+	ch = 0;
+	k = 0;
 	ref = 0;
-	printf("0x%.4x : ", ref);
+	ft_printf("0x%.4x : ", ref);
 	while (k < MEM_SIZE)
 	{
 		if (ch == 64)
 		{
-			printf("\n%#.4x : ", ref);
+			ft_printf("\n%#.4x : ", ref);
 			ch = 0;
 		}
-		printf("%.2x ", e->fild[k]);
+		ft_printf("%.2x ", e->fild[k]);
 		k++;
 		ch++;
 		ref++;
 	}
-	printf("\n");
+	ft_printf("\n");
 }
 
-void	ft_set_handlers(t_hndl *func)
+void		ft_set_handlers(t_hndl *func)
 {
 	func[1] = &ft_live_hndl;
 	func[2] = &ft_ld_hndl;
@@ -48,13 +57,13 @@ void	ft_set_handlers(t_hndl *func)
 	func[16] = &ft_aff_hndl;
 }
 
-static void ft_check_print(t_env *e, t_carlist *begin)
+static void	ft_check_print(t_env *e, t_carlist *begin)
 {
-	printf("Process %d hasn't lived for (%d) cycles (CTD %d)\n",
-				begin->carr.car_index, begin->carr.cycles, e->cycle_to_die);//cycles
-}	
+	ft_printf("Process %d hasn't lived for (%d) cycles (CTD %d)\n",
+	begin->carr.car_index, begin->carr.cycles, e->cycle_to_die);
+}
 
-void	ft_check_killed_carriage(t_env *e)
+void		ft_check_killed_carriage(t_env *e)
 {
 	t_carlist *begin;
 	t_carlist *tmp;
@@ -83,7 +92,7 @@ void	ft_check_killed_carriage(t_env *e)
 	}
 }
 
-void	ft_check_cycle(t_env *e, short *live)
+void		ft_check_cycle(t_env *e, short *live)
 {
 	ft_check_killed_carriage(e);
 	if (e->lives >= NBR_LIVE || e->checks == MAX_CHECKS)
@@ -97,5 +106,5 @@ void	ft_check_cycle(t_env *e, short *live)
 		*live = 0;
 	e->lives = 0;
 	if ((e->flag_num & 2) == 2)
-		printf("Cycle to die is now %d\n", e->cycle_to_die);
+		ft_printf("Cycle to die is now %d\n", e->cycle_to_die);
 }
